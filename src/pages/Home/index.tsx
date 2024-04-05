@@ -1,32 +1,26 @@
 import type { FC } from 'react';
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import useGetTopAnime from '@/services/anime/getTopAnime/useGetTopAnime';
+
+import HeroSection from './Section/HeroSection';
+import Navbar from '@/components/Navbar';
 
 interface HomeProps {}
 
 const Home: FC<HomeProps> = () => {
+  // const { data: topAnime } = useGetTopAnime();
+  // const { data: recentAnime } = useGetRecentAnime();
+
   return (
-    <div className="w-80 p-9">
-      <Card>
-        <CardHeader>
-          <CardTitle>Card Title</CardTitle>
-          <CardDescription>Card Description</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p>Card Content</p>
-        </CardContent>
-        <CardFooter>
-          <p>Card Footer</p>
-        </CardFooter>
-      </Card>
-    </div>
+    <>
+      <Navbar />
+      {/* <Layout> */}
+      <HeroSection />
+      {/* <Search /> */}
+      {/* <TopAiring data={topAnime} />
+      <RecenlyUpdated data={recentAnime} /> */}
+      {/* </Layout> */}
+    </>
   );
 };
 

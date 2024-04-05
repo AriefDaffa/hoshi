@@ -16,11 +16,11 @@ const EpisodeList: FC<EpisodeListProps> = ({ isOpen, onClose }) => {
   return (
     <div
       className={`absolute h-full w-full transition-all ${
-        isOpen ? 'left-full' : '-left-0'
+        isOpen ? '-left-0' : 'left-full'
       }`}
     >
       <div
-        className={`w-full h-full relative transition-all ease-in-out delay-100 bg-red-100 ${
+        className={`w-full h-full relative transition-all ease-in-out delay-100  ${
           isOpen ? 'bg-opacity-0' : 'bg-opacity-1'
         }`}
         // style={{ backgroundColor: 'rgba(18, 18, 18, 0.32)' }}

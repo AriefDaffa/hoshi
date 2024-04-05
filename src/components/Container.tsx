@@ -6,7 +6,9 @@ interface ContainerProps {
 
 const Container: FC<ContainerProps> = ({ children }) => {
   return (
-    <div className="bg-primary text-black w-full min-h-screen h-full relative">
+    <div
+      className={`bg-primary text-black w-full min-h-screen h-full relative`}
+    >
       {children}
     </div>
   );

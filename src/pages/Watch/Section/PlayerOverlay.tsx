@@ -4,6 +4,7 @@ import { FaPlay } from 'react-icons/fa6';
 import { MdFullscreen } from 'react-icons/md';
 import { IoArrowBack } from 'react-icons/io5';
 import { useMouse } from '@mantine/hooks';
+import { useNavigate } from 'react-router-dom';
 import type { ChangeEvent, Dispatch, FC, SetStateAction } from 'react';
 
 import IconButton from '@/components/IconButton';
@@ -35,6 +36,7 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
   onEpsListClick,
 }) => {
   const { ref, x, y } = useMouse();
+  const navigate = useNavigate();
   const [openControl, setOpenControl] = useState(false);
 
   const handleSeekChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -66,7 +68,7 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
       style={{ backgroundColor: openControl ? 'rgba(0, 0, 0, 0.35)' : '' }}
     >
       <div className="h-12 text-white flex items-center justify-between">
-        <IconButton>
+        <IconButton onClick={() => navigate('/')}>
           <IoArrowBack size={24} />
         </IconButton>
         <Badge
