@@ -21,19 +21,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { SheetTrigger } from '@/components/ui/sheet';
 
 interface PlayerOverlayProps {
   isPlaying: boolean;
   played: number;
   setPlayed: Dispatch<SetStateAction<number>>;
-  onEpsListClick: () => void;
 }
 
 const PlayerOverlay: FC<PlayerOverlayProps> = ({
   played,
   isPlaying,
   setPlayed,
-  onEpsListClick,
 }) => {
   const { ref, x, y } = useMouse();
   const navigate = useNavigate();
@@ -71,19 +70,21 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
         <IconButton onClick={() => navigate('/')}>
           <IoArrowBack size={24} />
         </IconButton>
-        <Badge
-          variant="default"
-          className="cursor-pointer"
-          onClick={onEpsListClick}
-        >
-          Episodes
-        </Badge>
+        <SheetTrigger>
+          <Badge variant="default" className="cursor-pointer">
+            Episodes
+          </Badge>
+        </SheetTrigger>
       </div>
       <div className=" text-white flex flex-col items-center gap-10">
         <div>
-          <Badge>Episode 1</Badge>
+          <Badge variant="secondary">
+            <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+              Jujutsu Kaisen
+            </h4>
+          </Badge>
           <h1 className="text-4xl font-extrabold tracking-tight lg:text-8xl">
-            Jujutsu Kaisen
+            Episode 1
           </h1>
           <p className="leading-7 text-justify w-2/3 line-clamp-4 [&:not(:first-child)]:mt-6">
             Idly indulging in baseless paranormal activities with the Occult

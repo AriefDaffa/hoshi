@@ -8,6 +8,7 @@ interface SearchResultCardProps {
   cardTitle: string;
   releaseDate: string;
   badgeType: string;
+  onClick: () => void;
 }
 
 const SearchResultCard: FC<SearchResultCardProps> = ({
@@ -15,6 +16,7 @@ const SearchResultCard: FC<SearchResultCardProps> = ({
   cardTitle,
   imageURL,
   releaseDate,
+  onClick,
 }) => {
   const { hovered, ref } = useHover();
 
@@ -22,6 +24,7 @@ const SearchResultCard: FC<SearchResultCardProps> = ({
     <div
       ref={ref}
       className="flex gap-3 mt-4 cursor-pointer hover:bg-white p-2 rounded-md"
+      onClick={onClick}
     >
       <img
         src={imageURL}

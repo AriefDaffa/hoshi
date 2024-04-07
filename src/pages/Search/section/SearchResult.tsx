@@ -8,9 +8,15 @@ interface SearchResultProps {
   keyword: string;
   isLoading: boolean;
   data: AnimeSearchData;
+  onClick: (id: string) => void;
 }
 
-const SearchResult: FC<SearchResultProps> = ({ data, keyword, isLoading }) => {
+const SearchResult: FC<SearchResultProps> = ({
+  data,
+  keyword,
+  isLoading,
+  onClick,
+}) => {
   return (
     <div className="flex justify-center w-full h-full">
       {keyword !== '' && (
@@ -27,6 +33,7 @@ const SearchResult: FC<SearchResultProps> = ({ data, keyword, isLoading }) => {
                     cardTitle={item.title}
                     imageURL={item.image}
                     releaseDate={item.releaseDate}
+                    onClick={() => onClick(item.id)}
                   />
                 ))
               ) : (

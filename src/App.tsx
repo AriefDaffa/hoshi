@@ -4,6 +4,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import Home from './pages/Home';
 import Watch from './pages/Watch';
 import Search from './pages/Search';
+import Detail from './pages/Search/Detail';
 
 const App = () => {
   const router = createBrowserRouter([
@@ -12,12 +13,16 @@ const App = () => {
       element: <Home />,
     },
     {
-      path: '/watch',
+      path: '/watch/:id',
       element: <Watch />,
     },
     {
       path: '/search',
       element: <Search />,
+    },
+    {
+      path: '/search/:id',
+      element: <Detail />,
     },
   ]);
 
