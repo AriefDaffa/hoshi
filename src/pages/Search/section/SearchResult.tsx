@@ -1,3 +1,4 @@
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import type { FC } from 'react';
 
 import SearchResultCard from '@/components/SearchResultCard';
@@ -42,18 +43,9 @@ const SearchResult: FC<SearchResultProps> = ({
                 </div>
               )
             ) : (
-              Array.from(Array(3), (_, i) => (
-                <div
-                  key={i}
-                  className="flex w-full h-full rounded-md p-2 gap-2 "
-                >
-                  <div className="w-24 h-36 rounded-md animate-pulse bg-gray-900"></div>
-                  <div className="flex flex-col gap-2 justify-end">
-                    <div className="h-5 w-24 bg-gray-900 rounded-md animate-pulse"></div>
-                    <div className="h-6 w-36 bg-gray-900 rounded-md animate-pulse"></div>
-                  </div>
-                </div>
-              ))
+              <div className="h-full w-full flex items-center justify-center">
+                <AiOutlineLoading3Quarters size={46} className="animate-spin" />
+              </div>
             )}
           </ScrollArea>
         </div>
