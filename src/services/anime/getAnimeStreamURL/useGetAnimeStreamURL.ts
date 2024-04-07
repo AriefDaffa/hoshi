@@ -6,12 +6,10 @@ interface UseGetAnimeStreamURLProps {
 }
 
 const useGetAnimeStreamURL = ({ id }: UseGetAnimeStreamURLProps) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
 
   const fetchData = useCallback(async () => {
-    setIsLoading(true);
-
     try {
       const req = await getAnimeStreamURL({ episodeID: id });
 

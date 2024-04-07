@@ -20,12 +20,10 @@ const defaultVal = {
 };
 
 const useGetAnimeInfo = ({ id }: UseGetSearchInfoProps): AnimeInfoResponse => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(defaultVal);
 
   const fetchData = useCallback(async () => {
-    setIsLoading(true);
-
     try {
       const req = await getAnimeInfo({ id });
 
