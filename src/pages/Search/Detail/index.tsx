@@ -1,4 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
+import { FaSortAmountUp, FaSortAmountDown } from 'react-icons/fa';
+import { useState } from 'react';
 import type { FC } from 'react';
 
 import Layout from '@/components/Layout';
@@ -16,12 +18,16 @@ import {
 } from '@/components/ui/breadcrumb';
 import { kebabToNormal } from '@/utils/kebabToNormal';
 import { uppercaseLetter } from '@/utils/uppercaseLetter';
+import { Input } from '@/components/ui/input';
 
 interface DetailProps {}
 
 const Detail: FC<DetailProps> = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const [sort, setSort] = useState('descend');
+  const [episode, setEpisode] = useState('');
 
   const checkID = typeof id === 'string' ? id : '';
 
@@ -108,21 +114,47 @@ const Detail: FC<DetailProps> = () => {
             <h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-left">
               Episode List
             </h4>
-            <div className="flex flex-col gap-4 mt-4">
-              {data.episodes.map((item, idx) => (
-                <div
-                  key={idx}
-                  onClick={() => navigate(`/watch/${item.id}`)}
-                  className="py-4 rounded-md cursor-pointer px-4 hover:bg-white hover:text-black flex items-center border"
-                >
-                  <h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-left flex items-center gap-2">
-                    Episode {item.number}{' '}
-                    {item.number === data.episodes.length && (
-                      <Badge className="bg-red-500">Latest</Badge>
-                    )}
-                  </h4>
-                </div>
-              ))}
+            <div className="mt-2 flex gap-2">
+              <div className="w-full">
+                <Input
+                  placeholder="Go To Episode"
+                  className="h-12"
+                  type="number"
+                  onChange={(e) => setEpisode(e.target.value)}
+                />
+              </div>
+              <div
+                onClick={() =>
+                  setSort(sort === 'descend' ? 'ascend' : 'descend')
+                }
+                className="w-fit border rounded-md p-4 flex items-center cursor-pointer hover:bg-primary"
+              >
+                {sort === 'descend' ? <FaSortAmountUp /> : <FaSortAmountDown />}
+              </div>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-4">
+              {data.episodes
+                .sort((a, b) =>
+                  sort === 'descend' ? a.number - b.number : b.number - a.number
+                )
+                .filter((item) => {
+                  if (episode === '') {
+                    return item;
+                  }
+
+                  return item.number.toString().includes(episode);
+                })
+                .map((item, idx) => (
+                  <div
+                    key={idx}
+                    onClick={() => navigate(`/watch/${item.id}`)}
+                    className="h-64 bg-primary flex items-center justify-center rounded-lg cursor-pointer relative hover:bg-white hover:text-black"
+                  >
+                    <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+                      {item.number}
+                    </h1>
+                  </div>
+                ))}
             </div>
           </div>
         </ScrollArea>
