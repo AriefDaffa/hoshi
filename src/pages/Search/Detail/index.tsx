@@ -14,6 +14,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { kebabToNormal } from '@/utils/kebabToNormal';
+import { uppercaseLetter } from '@/utils/uppercaseLetter';
 
 interface DetailProps {}
 
@@ -21,9 +23,9 @@ const Detail: FC<DetailProps> = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { data, isLoading } = useGetAnimeInfo({
-    id: typeof id === 'string' ? id : '',
-  });
+  const checkID = typeof id === 'string' ? id : '';
+
+  const { data, isLoading } = useGetAnimeInfo({ id: checkID });
 
   return (
     <>
@@ -36,7 +38,9 @@ const Detail: FC<DetailProps> = () => {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>{id}</BreadcrumbPage>
+              <BreadcrumbPage>
+                {uppercaseLetter(kebabToNormal(checkID))}
+              </BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
