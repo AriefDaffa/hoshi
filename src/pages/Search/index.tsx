@@ -41,7 +41,7 @@ const Search: FC<SearchProps> = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="w-full h-full min-h-[calc(100vh-3rem)] pt-10 text-center px-2"
+              className="w-full h-full min-h-[calc(100vh-3.5rem)] pt-10 text-center px-2"
             >
               <SearchComponent onChange={handleKeywordChange} />
               <SearchResult

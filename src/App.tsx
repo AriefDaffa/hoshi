@@ -1,9 +1,11 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import { ThemeProvider } from '@/components/theme-provider';
+
 import Home from './pages/Home';
 import Watch from './pages/Watch';
 import Search from './pages/Search';
+import Trending from './pages/Trending';
 import Detail from './pages/Search/Detail';
 
 const App = () => {
@@ -13,12 +15,16 @@ const App = () => {
       element: <Home />,
     },
     {
-      path: '/watch/:id',
+      path: '/watch/:slug/:id',
       element: <Watch />,
     },
     {
       path: '/search',
       element: <Search />,
+    },
+    {
+      path: '/trending',
+      element: <Trending />,
     },
     {
       path: '/search/:id',

@@ -20,6 +20,9 @@ const HeroSection: FC<HeroSectionProps> = () => {
     { id: 4, image: '/assets/images/carousel/4.png' },
     { id: 5, image: '/assets/images/carousel/5.png' },
     { id: 6, image: '/assets/images/carousel/6.png' },
+    { id: 7, image: '/assets/images/carousel/7.png' },
+    { id: 8, image: '/assets/images/carousel/8.jpeg' },
+    { id: 9, image: '/assets/images/carousel/9.jpeg' },
   ];
 
   const handleNav = () => {
@@ -30,7 +33,7 @@ const HeroSection: FC<HeroSectionProps> = () => {
   };
 
   return (
-    <div className="h-[calc(100vh-3rem)] flex items-center justify-center">
+    <div className="h-[calc(100vh-3.5rem)] flex items-center justify-center">
       <div className="h-full px-4 w-full max-w-screen-xl flex flex-row justify-center items-center gap-4 overflow-hidden">
         <div className="w-full overflow-hidden">
           <AnimatePresence>
@@ -47,7 +50,10 @@ const HeroSection: FC<HeroSectionProps> = () => {
                 </h1>
                 <p className="leading-7 text-muted-foreground [&:not(:first-child)]:mt-2">
                   find your favorite anime, or browse{' '}
-                  <span className="underline underline-offset-2">
+                  <span
+                    className="underline underline-offset-2 cursor-pointer"
+                    onClick={() => navigate('/trending')}
+                  >
                     trending anime
                   </span>
                   .
@@ -78,14 +84,22 @@ const HeroSection: FC<HeroSectionProps> = () => {
               <div className="flex flex-col gap-20">
                 {slides.map((item) => (
                   <div key={item.id} className="w-full">
-                    <img src={item.image} alt="" className="w-full" />
+                    <img
+                      src={item.image}
+                      alt=""
+                      className="w-64 h-96 object-cover"
+                    />
                   </div>
                 ))}
               </div>
               <div className="flex flex-col gap-20 -mt-[100%]">
                 {slides.reverse().map((item) => (
                   <div key={item.id} className="w-full">
-                    <img src={item.image} alt="" className="w-full" />
+                    <img
+                      src={item.image}
+                      alt=""
+                      className="w-64 h-96 object-cover"
+                    />
                   </div>
                 ))}
               </div>

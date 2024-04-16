@@ -1,52 +1,53 @@
+import { useParams } from 'react-router-dom';
 import type { FC } from 'react';
 
 import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
+import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import type { Episodes } from '@/services/anime/getAnimeInfo/types';
 
 interface EpisodeListProps {
-  isOpen: boolean;
-  onClose: () => void;
+  currentEps: string;
+  episodes: Episodes[];
 }
 
-const EpisodeList: FC<EpisodeListProps> = ({ isOpen, onClose }) => {
+const EpisodeList: FC<EpisodeListProps> = ({ currentEps, episodes }) => {
+  const { slug } = useParams();
+
   return (
-    <div
-      className={`absolute h-full w-full transition-all ${
-        isOpen ? '-left-0' : 'left-full'
-      }`}
-    >
-      <div
-        className={`w-full h-full relative transition-all ease-in-out delay-100  ${
-          isOpen ? 'bg-opacity-0' : 'bg-opacity-1'
-        }`}
-        // style={{ backgroundColor: 'rgba(18, 18, 18, 0.32)' }}
-        onClick={onClose}
-      >
-        <div
-          className={` h-full p-2 px-4 bg-black border absolute right-0 transition-all w-full max-w-96`}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="mt-2">
-            <div className="space-y-2 text-white">
-              <h4 className="font-medium leading-none">Episode Lists</h4>
-              <p className="text-sm text-muted-foreground">Choose episode</p>
-            </div>
+    <SheetContent>
+      <SheetHeader>
+        <SheetTitle>Episode Lists</SheetTitle>
+        <SheetDescription>Choose episode below</SheetDescription>
+      </SheetHeader>
+      <ScrollArea className="mt-2 h-[92vh]">
+        {episodes.map((item, idx) => (
+          <div
+            key={idx}
+            onClick={
+              currentEps === String(item.number)
+                ? () => {}
+                : () => (window.location.href = `/watch/${slug}/${item.id}`)
+            }
+            className={`px-3 py-4 my-2 cursor-pointer ${
+              currentEps === String(item.number) && 'bg-primary'
+            } hover:bg-primary rounded-md`}
+          >
+            <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight flex items-center gap-2">
+              Episode {item.number}{' '}
+              {currentEps === String(item.number) && (
+                <Badge variant="secondary">Curently watching</Badge>
+              )}
+            </h3>
           </div>
-          <div className="mt-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Card Title</CardTitle>
-                <CardDescription>Card Description</CardDescription>
-              </CardHeader>
-            </Card>
-          </div>
-        </div>
-      </div>
-    </div>
+        ))}
+      </ScrollArea>
+    </SheetContent>
   );
 };
 

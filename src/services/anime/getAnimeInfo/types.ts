@@ -6,7 +6,7 @@ export interface UseGetSearchInfoProps {
   id: string;
 }
 
-interface Episodes {
+export interface Episodes {
   id: string;
   number: 0;
   url: string;

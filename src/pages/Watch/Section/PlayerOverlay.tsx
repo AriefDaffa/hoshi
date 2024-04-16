@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { FaVolumeDown } from 'react-icons/fa';
-import { FaPlay } from 'react-icons/fa6';
-import { MdFullscreen } from 'react-icons/md';
-import { IoArrowBack } from 'react-icons/io5';
-import { useMouse } from '@mantine/hooks';
-import { useNavigate } from 'react-router-dom';
-import type { ChangeEvent, Dispatch, FC, SetStateAction } from 'react';
+import { FaPlay, FaPause } from 'react-icons/fa6';
+import { MdFullscreen, MdFullscreenExit } from 'react-icons/md';
+import { IoSettingsSharp } from 'react-icons/io5';
+import { useIdle } from '@mantine/hooks';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useParams } from 'react-router-dom';
+import type { ChangeEvent, FC } from 'react';
 
 import IconButton from '@/components/IconButton';
 import { Badge } from '@/components/ui/badge';
@@ -21,144 +22,262 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '@/components/ui/hover-card';
 import { SheetTrigger } from '@/components/ui/sheet';
+import { convertSec } from '@/utils/convertSec';
+import type { AnimeStreamSources } from '@/services/anime/getAnimeStreamURL/types';
+import { uppercaseLetter } from '@/utils/uppercaseLetter';
+import { kebabToNormal } from '@/utils/kebabToNormal';
 
 interface PlayerOverlayProps {
   isPlaying: boolean;
+  isFullScreen: boolean;
   played: number;
-  setPlayed: Dispatch<SetStateAction<number>>;
+  volume: number;
+  duration: number;
+  timePlayed: number;
+  currentEps: string;
+  vidResolution: string;
+  animeTitle: string;
+  animeDesc: string;
+  resolutionList: AnimeStreamSources[];
+  onClick: () => void;
+  handleSeekMouseDown: () => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  handleSeekMouseUp: (e: any) => void;
+  handleResolutionChange: (e: string) => void;
+  handleSeekChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleVolumeChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleFullScreen: () => void;
 }
 
 const PlayerOverlay: FC<PlayerOverlayProps> = ({
   played,
   isPlaying,
-  setPlayed,
+  isFullScreen,
+  volume,
+  duration,
+  timePlayed,
+  currentEps,
+  vidResolution,
+  animeTitle,
+  animeDesc,
+  resolutionList,
+  onClick,
+  handleSeekMouseDown,
+  handleSeekMouseUp,
+  handleSeekChange,
+  handleVolumeChange,
+  handleResolutionChange,
+  handleFullScreen,
 }) => {
-  const { ref, x, y } = useMouse();
-  const navigate = useNavigate();
-  const [openControl, setOpenControl] = useState(false);
+  const { slug } = useParams();
+  const isIdle = useIdle(1000);
 
-  const handleSeekChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPlayed(parseFloat(e.target.value));
+  const getBackgroundSize = (isVol = false) => {
+    return { backgroundSize: `${(isVol ? volume : played) * 100}% 100%` };
   };
 
-  const getBackgroundSize = () => {
-    return { backgroundSize: `${played * 100}% 100%` };
-  };
-
-  useEffect(() => {
-    if (isPlaying) {
-      setOpenControl(true);
-    } else {
-      setOpenControl(true);
-
-      const timer = setTimeout(() => {
-        setOpenControl(false);
-      }, 1500);
-
-      return () => clearTimeout(timer);
-    }
-  }, [isPlaying, x, y]);
+  const checkIsPlaying = useMemo(
+    () => (isPlaying ? isIdle : isPlaying),
+    [isIdle, isPlaying]
+  );
 
   return (
     <div
-      ref={ref}
-      className="absolute h-screen w-full flex flex-col justify-between font-geist p-10 "
-      style={{ backgroundColor: openControl ? 'rgba(0, 0, 0, 0.35)' : '' }}
+      className="absolute h-screen w-full p-10 z-40"
+      style={{ backgroundColor: !checkIsPlaying ? 'rgba(0, 0, 0, 0.35)' : '' }}
+      onClick={onClick}
     >
-      <div className="h-12 text-white flex items-center justify-between">
-        <IconButton onClick={() => navigate('/')}>
-          <IoArrowBack size={24} />
-        </IconButton>
-        <SheetTrigger>
-          <Badge variant="default" className="cursor-pointer">
-            Episodes
-          </Badge>
-        </SheetTrigger>
-      </div>
-      <div className=" text-white flex flex-col items-center gap-10">
-        <div>
-          <Badge variant="secondary">
-            <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-              Jujutsu Kaisen
-            </h4>
-          </Badge>
-          <h1 className="text-4xl font-extrabold tracking-tight lg:text-8xl">
-            Episode 1
-          </h1>
-          <p className="leading-7 text-justify w-2/3 line-clamp-4 [&:not(:first-child)]:mt-6">
-            Idly indulging in baseless paranormal activities with the Occult
-            Club, high schooler Yuuji Itadori spends his days at either the
-            clubroom or the hospital, where he visits his bedridden grandfather.
-            However, this leisurely lifestyle soon takes a turn for the strange
-            when he unknowingly encounters a cursed item. Triggering a chain of
-            supernatural occurrences, Yuuji finds himself suddenly thrust into
-            the world of Curses—dreadful beings formed from human malice and
-            negativity—after swallowing the said item, revealed to be a finger
-            belonging to the demon Sukuna Ryoumen, the King of Curses. Yuuji
-            experiences first-hand the threat these Curses pose to society as he
-            discovers his own newfound powers. Introduced to the Tokyo
-            Prefectural Jujutsu High School, he begins to walk down a path from
-            which he cannot return—the path of a Jujutsu sorcerer.
-          </p>
-        </div>
-        <div className="w-full flex flex-col gap-3 ">
-          <div className="w-full flex justify-between gap-6 items-center">
-            <IconButton>
-              <FaPlay size={24} className="cursor-pointer" />
-            </IconButton>
-            <div className="w-full h-min flex flex-col gap-4 relative">
-              <input
-                type="range"
-                min="0"
-                max="0.99999"
-                step="any"
-                className="w-full"
-                style={getBackgroundSize()}
-                value={played}
-                onChange={handleSeekChange}
-              />
-              <div className="absolute flex justify-between text-sm font-medium leading-none w-full mt-4 top-full">
-                <div>2:00</div>
-                <div>23:30</div>
+      <AnimatePresence>
+        {!checkIsPlaying && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="h-full w-full flex flex-col justify-between"
+          >
+            <div className="h-12 text-white flex items-center justify-between">
+              <Breadcrumb
+                className=" px-2 "
+                onClick={(e) => e.stopPropagation()}
+              >
+                <BreadcrumbList>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink href="/search">Search</BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <BreadcrumbLink
+                      href={`/search/${slug}`}
+                      className="line-clamp-1"
+                    >
+                      {uppercaseLetter(kebabToNormal(slug || ''))}
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem className="line-clamp-1">
+                    <BreadcrumbPage>Episode {currentEps}</BreadcrumbPage>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+              <SheetTrigger
+                onClick={(e) => e.stopPropagation()}
+                className="border p-2 rounded-md"
+              >
+                Episodes
+              </SheetTrigger>
+            </div>
+            <div className=" text-white flex flex-col items-center gap-10">
+              <div>
+                <Badge variant="secondary" className="">
+                  <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+                    Episode {currentEps}
+                  </h4>
+                </Badge>
+                <h1 className="text-4xl font-extrabold tracking-tight line-clamp-1 lg:text-8xl">
+                  {animeTitle}
+                </h1>
+                <p className="leading-7 text-justify w-2/3 line-clamp-4 [&:not(:first-child)]:mt-6">
+                  {animeDesc}
+                </p>
+              </div>
+              <div className="w-full flex flex-col gap-3 ">
+                <div className="w-full flex justify-between gap-6 items-center">
+                  <IconButton>
+                    {isPlaying ? (
+                      <FaPause size={24} className="cursor-pointer" />
+                    ) : (
+                      <FaPlay size={24} className="cursor-pointer" />
+                    )}
+                  </IconButton>
+                  <div
+                    className="w-full h-min flex flex-col gap-4 relative"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <input
+                      type="range"
+                      min="0"
+                      max="0.99999"
+                      step="any"
+                      className="w-full cursor-pointer slider-player"
+                      style={getBackgroundSize()}
+                      value={played}
+                      onChange={handleSeekChange}
+                      onMouseDown={handleSeekMouseDown}
+                      onMouseUp={handleSeekMouseUp}
+                    />
+                    <div className="absolute flex justify-between text-sm font-medium leading-none w-full mt-4 top-full">
+                      <div>{convertSec(timePlayed)}</div>
+                      <div>{convertSec(duration)}</div>
+                    </div>
+                  </div>
+                  <HoverCard openDelay={200}>
+                    <HoverCardTrigger onClick={(e) => e.stopPropagation()}>
+                      <IconButton>
+                        <FaVolumeDown size={24} className="cursor-pointer" />
+                      </IconButton>
+                    </HoverCardTrigger>
+                    <HoverCardContent onClick={(e) => e.stopPropagation()}>
+                      <input
+                        type="range"
+                        value={volume}
+                        min={0}
+                        max={1}
+                        step={0.0001}
+                        onClick={(e) => e.stopPropagation()}
+                        style={getBackgroundSize(true)}
+                        className="slider-vol w-full"
+                        onChange={handleVolumeChange}
+                      />
+                    </HoverCardContent>
+                  </HoverCard>
+                  <Popover>
+                    <PopoverTrigger
+                      className=""
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <IoSettingsSharp size={24} />
+                    </PopoverTrigger>
+                    <PopoverContent onClick={(e) => e.stopPropagation()}>
+                      <div className="">
+                        <div className="space-y-2">
+                          <h4 className="font-medium leading-none">
+                            Resolution
+                          </h4>
+                        </div>
+                        <div className="pt-3">
+                          <Select
+                            value={vidResolution}
+                            onValueChange={handleResolutionChange}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="480p" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {resolutionList.map((item, idx) => (
+                                <SelectItem key={idx} value={item.quality}>
+                                  {item.quality}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2 mt-4">
+                          <h4 className="font-medium leading-none">Server</h4>
+                        </div>
+                        <div className="pt-3">
+                          <Select>
+                            <SelectTrigger>
+                              <SelectValue placeholder="GogoAnime" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="light">GogoAnime</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                  <IconButton>
+                    {isFullScreen ? (
+                      <MdFullscreenExit
+                        size={26}
+                        className="cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleFullScreen();
+                        }}
+                      />
+                    ) : (
+                      <MdFullscreen
+                        size={26}
+                        className="cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleFullScreen();
+                        }}
+                      />
+                    )}
+                  </IconButton>
+                </div>
               </div>
             </div>
-            <IconButton>
-              <FaVolumeDown size={24} className="cursor-pointer" />
-            </IconButton>
-            <Popover>
-              <PopoverTrigger className="">
-                <Badge variant="destructive">1080p</Badge>
-              </PopoverTrigger>
-              <PopoverContent>
-                <div className="">
-                  <div className="space-y-2">
-                    <h4 className="font-medium leading-none">Resolution</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Set video resolution
-                    </p>
-                  </div>
-                  <div className="pt-3">
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Resolution" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="light">360p</SelectItem>
-                        <SelectItem value="dark">480p</SelectItem>
-                        <SelectItem value="system">720p</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
-            <IconButton>
-              <MdFullscreen size={26} className="cursor-pointer" />
-            </IconButton>
-          </div>
-        </div>
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

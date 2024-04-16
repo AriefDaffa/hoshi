@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import type { FC } from 'react';
+
 import {
   CalendarIcon,
   EnvelopeClosedIcon,
@@ -7,8 +10,6 @@ import {
   PersonIcon,
   RocketIcon,
 } from '@radix-ui/react-icons';
-import type { FC } from 'react';
-
 import {
   CommandDialog,
   CommandEmpty,
@@ -26,6 +27,8 @@ interface NavbarProps {}
 const Navbar: FC<NavbarProps> = () => {
   const [open, setOpen] = useState(false);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
@@ -39,11 +42,16 @@ const Navbar: FC<NavbarProps> = () => {
 
   return (
     <>
-      <div className="h-12 border-b-[1px] flex justify-center w-full">
+      <div className="h-14 border-b-[1px] flex justify-center w-full">
         <div className="flex justify-between items-center h-full px-4 w-full max-w-screen-xl">
-          <div className="flex items-center gap-2">X</div>
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => navigate('/')}
+          >
+            <img src="/assets/images/logo.png" alt="" className="h-12" />
+          </div>
           <div>
-            <Button
+            {/* <Button
               variant="outline"
               className="text-muted-foreground"
               onClick={() => setOpen(true)}
@@ -52,11 +60,11 @@ const Navbar: FC<NavbarProps> = () => {
               <kbd className="ml-3 pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
                 <span className="text-xs">⌘</span>K
               </kbd>
-            </Button>
+            </Button> */}
           </div>
         </div>
       </div>
-      <CommandDialog open={open} onOpenChange={setOpen}>
+      {/* <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput placeholder="Type a command or search..." />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
@@ -93,7 +101,7 @@ const Navbar: FC<NavbarProps> = () => {
             </CommandItem>
           </CommandGroup>
         </CommandList>
-      </CommandDialog>
+      </CommandDialog> */}
     </>
   );
 };

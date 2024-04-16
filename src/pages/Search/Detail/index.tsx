@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { FaSortAmountUp, FaSortAmountDown } from 'react-icons/fa';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { FC } from 'react';
 
 import Layout from '@/components/Layout';
@@ -33,6 +33,12 @@ const Detail: FC<DetailProps> = () => {
   const checkID = typeof id === 'string' ? id : '';
 
   const { data, isLoading } = useGetAnimeInfo({ id: checkID });
+
+  useEffect(() => {
+    if (!isLoading && data.id === '') {
+      navigate('/search');
+    }
+  }, [data, isLoading, navigate]);
 
   return (
     <>
@@ -155,7 +161,7 @@ const Detail: FC<DetailProps> = () => {
                   .map((item, idx) => (
                     <div
                       key={idx}
-                      onClick={() => navigate(`/watch/${item.id}`)}
+                      onClick={() => navigate(`/watch/${id}/${item.id}`)}
                       className="h-64 bg-primary flex items-center justify-center rounded-lg cursor-pointer relative hover:bg-white hover:text-black"
                     >
                       <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">

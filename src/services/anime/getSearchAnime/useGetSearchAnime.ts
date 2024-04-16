@@ -38,11 +38,11 @@ const useGetSearchAnime = ({
     }
   }, [keyword]);
 
-  console.log(keyword);
-
   useEffect(() => {
     if (keyword !== '') {
       fetchData();
+    } else {
+      setData(defaultVal);
     }
   }, [fetchData, keyword]);
 
