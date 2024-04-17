@@ -110,7 +110,7 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
             className="h-full w-full flex flex-col justify-between"
           >
             <div className="h-12 text-white flex items-center justify-between">
-              <Breadcrumb
+              {/* <Breadcrumb
                 className=" px-2 "
                 onClick={(e) => e.stopPropagation()}
               >
@@ -132,7 +132,8 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
                     <BreadcrumbPage>Episode {currentEps}</BreadcrumbPage>
                   </BreadcrumbItem>
                 </BreadcrumbList>
-              </Breadcrumb>
+              </Breadcrumb> */}
+              <div>x</div>
               <SheetTrigger
                 onClick={(e) => e.stopPropagation()}
                 className="border p-2 rounded-md"
@@ -141,7 +142,7 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
               </SheetTrigger>
             </div>
             <div className=" text-white flex flex-col items-center gap-10">
-              <div>
+              {/* <div>
                 <Badge variant="secondary" className="">
                   <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
                     Episode {currentEps}
@@ -153,7 +154,7 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
                 <p className="leading-7 text-justify w-2/3 line-clamp-4 [&:not(:first-child)]:mt-6">
                   {animeDesc}
                 </p>
-              </div>
+              </div> */}
               <div className="w-full flex flex-col gap-3 ">
                 <div className="w-full flex justify-between gap-6 items-center">
                   <IconButton>

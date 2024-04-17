@@ -51,9 +51,9 @@ const Trending: FC<TrendingProps> = () => {
                       <img
                         src={item.image}
                         alt=""
-                        className="w-64 h-[19rem] object-cover rounded-md"
+                        className="w-60 h-[19rem] object-cover rounded-md"
                       />
-                      <div>
+                      <div className="w-full">
                         <Badge className=" bg-red-600">
                           <h4 className="scroll-m-20 text-md font-semibold tracking-tight">
                             Trending {idx + 2}

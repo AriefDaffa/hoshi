@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import type { ChangeEvent, FC } from 'react';
 
 import Layout from '@/components/Layout';
-import Navbar from '@/components/Navbar';
 import useGetSearchAnime from '@/services/anime/getSearchAnime/useGetSearchAnime';
 
 import SearchResult from './section/SearchResult';
@@ -32,29 +31,26 @@ const Search: FC<SearchProps> = () => {
   };
 
   return (
-    <>
-      <Navbar />
-      <Layout>
-        <AnimatePresence>
-          {!animate && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="w-full h-full min-h-[calc(100vh-3.5rem)] pt-10 text-center px-2"
-            >
-              <SearchComponent onChange={handleKeywordChange} />
-              <SearchResult
-                keyword={value}
-                data={data}
-                isLoading={isLoading}
-                onClick={handleOnClick}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </Layout>
-    </>
+    <Layout>
+      <AnimatePresence>
+        {!animate && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="w-full h-full min-h-[calc(100vh-3.5rem)] pt-10 text-center px-2"
+          >
+            <SearchComponent onChange={handleKeywordChange} />
+            <SearchResult
+              keyword={value}
+              data={data}
+              isLoading={isLoading}
+              onClick={handleOnClick}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </Layout>
   );
 };
 

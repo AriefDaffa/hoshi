@@ -2,26 +2,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { FC } from 'react';
 
-import {
-  CalendarIcon,
-  EnvelopeClosedIcon,
-  FaceIcon,
-  GearIcon,
-  PersonIcon,
-  RocketIcon,
-} from '@radix-ui/react-icons';
-import {
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-  CommandShortcut,
-} from '@/components/ui/command';
-import { Button } from './ui/button';
-
 interface NavbarProps {}
 
 const Navbar: FC<NavbarProps> = () => {
@@ -41,7 +21,7 @@ const Navbar: FC<NavbarProps> = () => {
   }, []);
 
   return (
-    <>
+    <div className="sticky top-0 w-full bg-[#09090B] z-50">
       <div className="h-14 border-b-[1px] flex justify-center w-full">
         <div className="flex justify-between items-center h-full px-4 w-full max-w-screen-xl">
           <div
@@ -102,7 +82,7 @@ const Navbar: FC<NavbarProps> = () => {
           </CommandGroup>
         </CommandList>
       </CommandDialog> */}
-    </>
+    </div>
   );
 };
 

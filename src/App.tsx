@@ -6,7 +6,7 @@ import Home from './pages/Home';
 import Watch from './pages/Watch';
 import Search from './pages/Search';
 import Trending from './pages/Trending';
-import Detail from './pages/Search/Detail';
+import AnimeDetail from './pages/AnimeDetail';
 
 const App = () => {
   const router = createBrowserRouter([
@@ -28,7 +28,7 @@ const App = () => {
     },
     {
       path: '/search/:id',
-      element: <Detail />,
+      element: <AnimeDetail />,
     },
   ]);
 
