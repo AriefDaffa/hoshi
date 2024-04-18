@@ -9,17 +9,17 @@ interface LatestSectionProps {
 
 const LatestSection: FC<LatestSectionProps> = ({ data }) => {
   return (
-    <div className="mb-4 mt-10">
+    <div className="mb-4 mt-10 ">
       <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
         Latest
       </h3>
-      <div className="grid gap-4 grid-cols-5 mt-4">
+      <div className="grid gap-4 grid-cols-2 mt-4 sm:grid-cols-3 md:grid-cols-5">
         {data.results.map((item, idx) => (
           <div key={idx} className="w-full h-full relative">
             <img
               src={item.image}
               alt=""
-              className="w-full h-96 object-cover rounded-md"
+              className="w-full h-60 object-cover rounded-md lg:h-96"
             />
             <div className="absolute bottom-0 bg-bluePrimary w-full text-center rounded-b-md py-1 text-lg font-semibold">
               Episode {item.episodeNumber}

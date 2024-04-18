@@ -10,11 +10,11 @@ interface TrendingSectionProps {
 
 const TrendingSection: FC<TrendingSectionProps> = ({ data }) => {
   return (
-    <div>
+    <div className="px-2">
       <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
         Trending
       </h3>
-      <div className="grid gap-4 grid-cols-5 mt-4">
+      <div className="grid gap-4 grid-cols-2 mt-4 sm:grid-cols-3 md:grid-cols-5">
         {data.results.map((item, idx) => (
           <div key={idx} className="w-full h-full relative">
             <Badge className="absolute top-1 left-1 bg-red-600 text-base">
@@ -23,7 +23,7 @@ const TrendingSection: FC<TrendingSectionProps> = ({ data }) => {
             <img
               src={item.image}
               alt=""
-              className="w-full h-96 object-cover rounded-md"
+              className="w-full h-60 object-cover rounded-md lg:h-96"
             />
             <div>
               {/* <div className="flex gap-2">
