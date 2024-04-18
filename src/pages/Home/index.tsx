@@ -6,10 +6,20 @@ import type { FC } from 'react';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 
+import useGetTopAnime from '@/services/anime/getTopAnime/useGetTopAnime';
+import useGetRecentAnime from '@/services/anime/getRecentAnime/useGetRecentAnime';
+
+import TrendingSection from './Section/TrendingSection';
+import LatestSection from './Section/LatestSection';
+
 interface HomeProps {}
 
 const Home: FC<HomeProps> = () => {
   const navigate = useNavigate();
+
+  const { data: trendingAnime, isLoading: isTrendingLoading } =
+    useGetTopAnime();
+  const { data: latestAnime, isLoading: isLatestLoading } = useGetRecentAnime();
 
   return (
     <Layout>
@@ -18,7 +28,7 @@ const Home: FC<HomeProps> = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="text-center h-[90vh] flex justify-center items-center"
+        className="text-center h-screen flex justify-center items-center"
       >
         <div>
           <h1 className="scroll-m-20 text-4xl font-medium tracking-tight lg:text-5xl">
@@ -31,7 +41,14 @@ const Home: FC<HomeProps> = () => {
               className="underline underline-offset-2 cursor-pointer"
               onClick={() => navigate('/trending')}
             >
-              trending anime
+              trending
+            </span>{' '}
+            and{' '}
+            <span
+              className="underline underline-offset-2 cursor-pointer"
+              onClick={() => navigate('/trending')}
+            >
+              latest anime
             </span>
             .
           </p>
@@ -47,6 +64,8 @@ const Home: FC<HomeProps> = () => {
           </div>
         </div>
       </motion.div>
+      {!isTrendingLoading && <TrendingSection data={trendingAnime} />}
+      {!isLatestLoading && <LatestSection data={latestAnime} />}
     </Layout>
   );
 };

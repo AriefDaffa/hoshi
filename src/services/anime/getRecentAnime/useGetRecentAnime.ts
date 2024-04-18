@@ -1,9 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { getRecentAnime } from '.';
 
-const useGetRecentAnime = () => {
+import { getRecentAnime } from '.';
+import type { AnimeRecentResponse } from './types';
+
+const defaultVal = {
+  currentPage: 0,
+  hasNextPage: true,
+  results: [],
+};
+
+const useGetRecentAnime = (): AnimeRecentResponse => {
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState({});
+  const [data, setData] = useState(defaultVal);
 
   const fetchData = useCallback(async () => {
     try {
@@ -16,10 +24,10 @@ const useGetRecentAnime = () => {
       if (req.status >= 200 && req.status < 300) {
         setData(response);
       } else {
-        setData({});
+        setData(defaultVal);
       }
     } catch (error) {
-      setData({});
+      setData(defaultVal);
       setIsLoading(false);
     }
   }, []);

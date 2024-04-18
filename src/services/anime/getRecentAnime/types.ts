@@ -1,20 +1,19 @@
-export interface AnimeTopResults {
+export interface AnimeRecentResults {
   id: string;
   episodeId: string;
   episodeNumber: number;
   url: string;
   title: string;
   image: string;
-  genres: string[];
 }
 
-export interface AnimeTopData {
+export interface AnimeRecentData {
   currentPage: number;
   hasNextPage: boolean;
-  results: AnimeTopResults[];
+  results: AnimeRecentResults[];
 }
 
-export interface AnimeTopResponse {
-  data: AnimeTopData;
+export interface AnimeRecentResponse {
+  data: AnimeRecentData;
   isLoading: boolean;
 }
