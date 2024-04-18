@@ -36,21 +36,7 @@ const Home: FC<HomeProps> = () => {
             <span className="text-bluePrimary">easy</span>
           </h1>
           <p className="leading-7 text-muted-foreground [&:not(:first-child)]:mt-2">
-            find your favorite anime, or browse{' '}
-            <span
-              className="underline underline-offset-2 cursor-pointer"
-              onClick={() => navigate('/trending')}
-            >
-              trending
-            </span>{' '}
-            and{' '}
-            <span
-              className="underline underline-offset-2 cursor-pointer"
-              onClick={() => navigate('/trending')}
-            >
-              latest anime
-            </span>
-            .
+            find your favorite anime, or browse trending and latest anime below.
           </p>
           <div className="mt-4 flex justify-center">
             <Button

@@ -17,7 +17,7 @@ const TrendingSection: FC<TrendingSectionProps> = ({ data }) => {
       <div className="grid gap-4 grid-cols-5 mt-4">
         {data.results.map((item, idx) => (
           <div key={idx} className="w-full h-full relative">
-            <Badge className="absolute top-1 left-1 bg-red-600">
+            <Badge className="absolute top-1 left-1 bg-red-600 text-base">
               Trending {idx + 1}
             </Badge>
             <img

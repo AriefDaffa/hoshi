@@ -9,7 +9,7 @@ interface LatestSectionProps {
 
 const LatestSection: FC<LatestSectionProps> = ({ data }) => {
   return (
-    <div className="my-4">
+    <div className="mb-4 mt-10">
       <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
         Latest
       </h3>
@@ -21,7 +21,9 @@ const LatestSection: FC<LatestSectionProps> = ({ data }) => {
               alt=""
               className="w-full h-96 object-cover rounded-md"
             />
-            <div></div>
+            <div className="absolute bottom-0 bg-bluePrimary w-full text-center rounded-b-md py-1 text-lg font-semibold">
+              Episode {item.episodeNumber}
+            </div>
           </div>
         ))}
       </div>
