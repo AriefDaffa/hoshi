@@ -219,7 +219,7 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
                           <h4 className="font-medium leading-none">Server</h4>
                         </div>
                         <div className="pt-3">
-                          <Select>
+                          <Select disabled>
                             <SelectTrigger>
                               <SelectValue placeholder="GogoAnime" />
                             </SelectTrigger>
