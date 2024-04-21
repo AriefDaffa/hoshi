@@ -1,5 +1,4 @@
 import { FaSortAmountUp, FaSortAmountDown } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
 import type { ChangeEvent, FC } from 'react';
 
 import { Input } from '@/components/ui/input';
@@ -21,7 +20,10 @@ const AnimeEpisodeList: FC<AnimeEpisodeListProps> = ({
   episode,
   handleSort,
 }) => {
-  const navigate = useNavigate();
+  const handleNavigate = (movieID: string) => {
+    // use window location to navigate to force render player component
+    window.location.href = `/watch/${id}/${movieID}`;
+  };
 
   return (
     <div className="mt-10 text-left">
@@ -59,7 +61,7 @@ const AnimeEpisodeList: FC<AnimeEpisodeListProps> = ({
           .map((item, idx) => (
             <div
               key={idx}
-              onClick={() => navigate(`/watch/${id}/${item.id}`)}
+              onClick={() => handleNavigate(item.id)}
               className="h-64 bg-primary flex items-center justify-center rounded-lg cursor-pointer relative hover:bg-white hover:text-black"
             >
               <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">

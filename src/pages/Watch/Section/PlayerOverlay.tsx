@@ -9,7 +9,6 @@ import { useParams } from 'react-router-dom';
 import type { ChangeEvent, FC } from 'react';
 
 import IconButton from '@/components/IconButton';
-import { Badge } from '@/components/ui/badge';
 import {
   Popover,
   PopoverContent,
@@ -72,8 +71,6 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
   timePlayed,
   currentEps,
   vidResolution,
-  animeTitle,
-  animeDesc,
   resolutionList,
   onClick,
   handleSeekMouseDown,
@@ -110,15 +107,11 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
             className="h-full w-full flex flex-col justify-between"
           >
             <div className="h-12 text-white flex items-center justify-between">
-              {/* <Breadcrumb
+              <Breadcrumb
                 className=" px-2 "
                 onClick={(e) => e.stopPropagation()}
               >
                 <BreadcrumbList>
-                  <BreadcrumbItem>
-                    <BreadcrumbLink href="/search">Search</BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
                   <BreadcrumbItem>
                     <BreadcrumbLink
                       href={`/search/${slug}`}
@@ -132,29 +125,15 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
                     <BreadcrumbPage>Episode {currentEps}</BreadcrumbPage>
                   </BreadcrumbItem>
                 </BreadcrumbList>
-              </Breadcrumb> */}
-              <div>x</div>
+              </Breadcrumb>
               <SheetTrigger
                 onClick={(e) => e.stopPropagation()}
-                className="border p-2 rounded-md"
+                className="border p-2 rounded-md bg-black"
               >
                 Episodes
               </SheetTrigger>
             </div>
             <div className=" text-white flex flex-col items-center gap-10">
-              {/* <div>
-                <Badge variant="secondary" className="">
-                  <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-                    Episode {currentEps}
-                  </h4>
-                </Badge>
-                <h1 className="text-4xl font-extrabold tracking-tight line-clamp-1 lg:text-8xl">
-                  {animeTitle}
-                </h1>
-                <p className="leading-7 text-justify w-2/3 line-clamp-4 [&:not(:first-child)]:mt-6">
-                  {animeDesc}
-                </p>
-              </div> */}
               <div className="w-full flex flex-col gap-3 ">
                 <div className="w-full flex justify-between gap-6 items-center">
                   <IconButton>
@@ -185,7 +164,7 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
                       <div>{convertSec(duration)}</div>
                     </div>
                   </div>
-                  <HoverCard openDelay={200}>
+                  <HoverCard openDelay={100}>
                     <HoverCardTrigger onClick={(e) => e.stopPropagation()}>
                       <IconButton>
                         <FaVolumeDown size={24} className="cursor-pointer" />
