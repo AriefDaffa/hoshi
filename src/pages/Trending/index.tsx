@@ -2,15 +2,12 @@ import type { FC } from 'react';
 
 import useGetTopAnime from '@/services/anime/getTopAnime/useGetTopAnime';
 import Layout from '@/components/Layout';
-import Navbar from '@/components/Navbar';
-import { div } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
 import Top4Anime from './Section/Top4Anime';
 
 interface TrendingProps {}
 
 const Trending: FC<TrendingProps> = () => {
-  const { data, isLoading } = useGetTopAnime();
+  const { data } = useGetTopAnime();
 
   const [head] = data.results;
   const headingData = data.results.slice(1, 4);

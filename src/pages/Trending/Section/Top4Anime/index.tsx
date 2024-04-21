@@ -1,18 +1,12 @@
 import type { FC } from 'react';
 
-import { Badge } from '@/components/ui/badge';
 import type { AnimeTopResults } from '@/services/anime/getTopAnime/types';
 
 interface Top4AnimeProps extends AnimeTopResults {
   rightData: AnimeTopResults[];
 }
 
-const Top4Anime: FC<Top4AnimeProps> = ({
-  image = '',
-  title = '',
-  genres = [],
-  rightData = [],
-}) => {
+const Top4Anime: FC<Top4AnimeProps> = ({ image = '' }) => {
   return (
     <div className="w-full h-screen flex gap-2">
       <div className="h-[20rem] w-full flex">
