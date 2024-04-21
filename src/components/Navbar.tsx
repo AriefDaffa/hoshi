@@ -1,24 +1,10 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { FC } from 'react';
 
 interface NavbarProps {}
 
 const Navbar: FC<NavbarProps> = () => {
-  const [open, setOpen] = useState(false);
-
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const down = (e: KeyboardEvent) => {
-      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        setOpen((open) => !open);
-      }
-    };
-    document.addEventListener('keydown', down);
-    return () => document.removeEventListener('keydown', down);
-  }, []);
 
   return (
     <div className="sticky top-0 w-full bg-[#09090B] z-50">
