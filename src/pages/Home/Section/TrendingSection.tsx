@@ -19,8 +19,11 @@ const TrendingSection: FC<TrendingSectionProps> = ({ data, isLoading }) => {
       <div className="w-full h-full min-h-[75vh] flex gap-2">
         <div className="w-full grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-2">
           {isLoading
-            ? Array.from(Array(10), () => (
-                <div className="flex gap-2 items-end p-2 border rounded-lg">
+            ? Array.from(Array(10), (_, i) => (
+                <div
+                  key={i}
+                  className="flex gap-2 items-end p-2 border rounded-lg"
+                >
                   <div className="w-36 h-40 border bg-slate-800 animate-pulse rounded-lg"></div>
                   <div className="w-full flex flex-col gap-2">
                     <div className="h-[28px] w-full bg-slate-800 rounded-lg animate-pulse"></div>
