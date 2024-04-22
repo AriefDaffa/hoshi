@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import type { FC } from 'react';
 
 import type { AnimeTopData } from '@/services/anime/getTopAnime/types';
@@ -9,8 +10,7 @@ interface TrendingSectionProps {
 }
 
 const TrendingSection: FC<TrendingSectionProps> = ({ data, isLoading }) => {
-  // console.log(data);
-
+  const navigate = useNavigate();
   return (
     <div className="px-2">
       <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight mb-2">
@@ -35,6 +35,7 @@ const TrendingSection: FC<TrendingSectionProps> = ({ data, isLoading }) => {
                 <div
                   key={idx}
                   className="flex gap-2 items-end p-2 border rounded-lg cursor-pointer relative hover:bg-black"
+                  onClick={() => navigate(`/search/${item.id}`)}
                 >
                   <div className="absolute top-2 right-2 bg-red-600 rounded-lg w-10 h-10 flex items-center justify-center font-bold">
                     #{idx + 1}

@@ -24,20 +24,29 @@ const LatestSection: FC<LatestSectionProps> = ({ data, isLoading }) => {
               </div>
             ))
           : data.results.map((item, idx) => (
-              <div key={idx} className="border rounded-lg cursor-pointer">
+              <div
+                key={idx}
+                className="border rounded-lg cursor-pointer relative hover:brightness-75"
+                onClick={() =>
+                  (window.location.href = `/watch/${item.id}/${item.episodeId}`)
+                }
+              >
                 <img
                   src={item.image}
                   alt=""
                   className="w-full h-96 object-cover rounded-t-lg"
                 />
-                <div className="text-center bg-bluePrimary rounded-b-lg font-bold py-1">
+                <div className="text-center bg-red-600 rounded-l-lg font-bold py-1 absolute top-4 right-0 px-2">
                   Episode {item.episodeNumber}
                 </div>
-                <div className="p-2">
+                <div className="text-center bg-bluePrimary rounded-b-lg font-bold py-1 line-clamp-1">
+                  {item.title}
+                </div>
+                {/* <div className="p-2">
                   <p className="text-base font-semibold line-clamp-2">
                     {item.title}
                   </p>
-                </div>
+                </div> */}
               </div>
             ))}
       </div>
