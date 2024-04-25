@@ -2,18 +2,16 @@ import ReactPlayer from 'react-player';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useFullscreen } from '@mantine/hooks';
 import { useEffect, useRef, useState } from 'react';
-import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import type { ChangeEvent, FC } from 'react';
 import type { OnProgressProps } from 'react-player/base';
-
-import Container from '@/components/Container';
-import { Sheet } from '@/components/ui/sheet';
 
 import PlayerOverlay from './Section/PlayerOverlay';
 import EpisodeList from './Section/EpisodeList';
 import useGetAnimeInfo from '@/services/anime/getAnimeInfo/useGetAnimeInfo';
 import useGetAnimeStreamURL from '@/services/anime/getAnimeStreamURL/useGetAnimeStreamURL';
+import Layout from '@/components/Layout';
 
+import AnimeDesc from './Section/AnimeDesc';
 interface WatchProps {}
 
 const Watch: FC<WatchProps> = () => {
@@ -24,7 +22,7 @@ const Watch: FC<WatchProps> = () => {
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [isBuffer, setIsBuffer] = useState(false);
-  const [vidResolution, setVidResolution] = useState('480p');
+  const [vidResolution, setVidResolution] = useState('0');
   const [played, setPlayed] = useState(0);
   const [volume, setVolume] = useState(0.6);
   const [isSeeking, setIsSeeking] = useState(false);
@@ -92,46 +90,40 @@ const Watch: FC<WatchProps> = () => {
     }
   }, [animeInfo, isAnimeInfoLoading, isAnimeStreamURL, navigate, streamURL]);
 
+  console.log(isBuffer);
+
   return (
-    <Container>
-      <Sheet>
-        <div className="w-full h-full relative overflow-hidden">
-          {(isBuffer || isAnimeInfoLoading || isAnimeStreamURL) && (
-            <div className="absolute top-0 bottom-0 left-0 right-0 m-auto flex items-center justify-center">
-              <div className="w-min">
-                <AiOutlineLoading3Quarters size={46} className="animate-spin" />
-              </div>
-            </div>
-          )}
-          <PlayerOverlay
-            played={played}
-            volume={volume}
-            duration={duration}
-            currentEps={currentEps || ''}
-            timePlayed={secondPlayed}
-            vidResolution={vidResolution}
-            animeTitle={animeInfo.title}
-            animeDesc={animeInfo.description}
-            resolutionList={streamURL.sources}
-            isPlaying={isPlaying}
-            isFullScreen={isFullScreen}
-            onClick={handlePlayer}
-            handleSeekMouseDown={handleSeekMouseDown}
-            handleSeekMouseUp={handleSeekMouseUp}
-            handleSeekChange={handleSeekChange}
-            handleVolumeChange={handleVolumeChange}
-            handleResolutionChange={handleResolutionChange}
-            handleFullScreen={toggle}
-          />
-          <div className="w-screen h-screen">
+    <Layout>
+      <div
+        className={`w-full h-full ${isFullScreen ? '' : ' lg:flex lg:gap-4'}`}
+      >
+        <div className={` ${isFullScreen ? '' : 'lg:w-2/3 pt-2'} `}>
+          <div
+            className={`relative  ${
+              isFullScreen ? '' : 'w-full h-full lg:h-[70vh]'
+            }`}
+          >
+            <PlayerOverlay
+              duration={duration}
+              isPlaying={isPlaying}
+              played={played}
+              volume={volume}
+              timePlayed={secondPlayed}
+              isFullScreen={isFullScreen}
+              vidResolution={vidResolution}
+              onClick={handlePlayer}
+              resolutionList={streamURL.sources}
+              handleFullScreen={toggle}
+              handleSeekMouseDown={handleSeekMouseDown}
+              handleSeekMouseUp={handleSeekMouseUp}
+              handleSeekChange={handleSeekChange}
+              handleVolumeChange={handleVolumeChange}
+              handleResolutionChange={handleResolutionChange}
+            />
             <ReactPlayer
               key={`${slug}-${id}`}
               ref={player}
-              url={
-                streamURL.sources.filter(
-                  (item) => item.quality === vidResolution
-                )[0]?.url
-              }
+              url={streamURL.sources[Number(vidResolution || 0)]?.url}
               width={'100%'}
               height={'100%'}
               volume={volume}
@@ -145,13 +137,15 @@ const Watch: FC<WatchProps> = () => {
               onDuration={(e) => setDuration(e)}
             />
           </div>
+          {!isAnimeInfoLoading && (
+            <AnimeDesc {...animeInfo} currentEps={currentEps} />
+          )}
         </div>
-        <EpisodeList
-          episodes={animeInfo.episodes}
-          currentEps={currentEps || ''}
-        />
-      </Sheet>
-    </Container>
+        {!isAnimeInfoLoading && (
+          <EpisodeList episodes={animeInfo.episodes} currentEps={currentEps} />
+        )}
+      </div>
+    </Layout>
   );
 };
 

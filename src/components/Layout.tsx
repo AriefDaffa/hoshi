@@ -1,15 +1,25 @@
-import Navbar from './Navbar';
+import { useLocation } from 'react-router-dom';
+import { useFullscreen } from '@mantine/hooks';
 import type { FC, ReactNode } from 'react';
+
+import Navbar from './Navbar';
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 const Layout: FC<LayoutProps> = ({ children }) => {
+  const { fullscreen: isFullScreen } = useFullscreen();
+  const location = useLocation();
+
+  const checkFullScreen = isFullScreen && location.pathname.includes('watch');
+
   return (
     <div className="w-full h-full flex flex-col items-center relative">
-      <Navbar />
-      <div className="w-full max-w-screen-xl">{children}</div>
+      {!checkFullScreen && <Navbar />}
+      <div className={`w-full ${checkFullScreen ? '' : 'max-w-screen-xl'}`}>
+        {children}
+      </div>
     </div>
   );
 };

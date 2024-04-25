@@ -76,8 +76,8 @@ input[type='range'] {
 
 input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
-  height: 20px;
-  width: 20px;
+  height: 16px;
+  width: 16px;
   border-radius: 50%;
   background: #1ec5f5;
   cursor: pointer;
@@ -113,4 +113,24 @@ input[type='range']::-webkit-slider-thumb:active {
 ::-webkit-scrollbar-thumb {
   background: #181818;
   border-radius: 5px;
+}
+
+.player-gradient {
+  background: rgb(0, 0, 0);
+  background: -moz-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.28343837535014005) 0%,
+    rgba(255, 255, 255, 0.006127450980392135) 100%
+  );
+  background: -webkit-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.28343837535014005) 0%,
+    rgba(255, 255, 255, 0.006127450980392135) 100%
+  );
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.28343837535014005) 0%,
+    rgba(255, 255, 255, 0.006127450980392135) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#ffffff",GradientType=1);
 }

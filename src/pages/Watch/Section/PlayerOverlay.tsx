@@ -5,15 +5,9 @@ import { MdFullscreen, MdFullscreenExit } from 'react-icons/md';
 import { IoSettingsSharp } from 'react-icons/io5';
 import { useIdle } from '@mantine/hooks';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useParams } from 'react-router-dom';
 import type { ChangeEvent, FC } from 'react';
 
 import IconButton from '@/components/IconButton';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
 import {
   Select,
   SelectContent,
@@ -22,23 +16,20 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from '@/components/ui/hover-card';
-import { SheetTrigger } from '@/components/ui/sheet';
 import { convertSec } from '@/utils/convertSec';
 import type { AnimeStreamSources } from '@/services/anime/getAnimeStreamURL/types';
-import { uppercaseLetter } from '@/utils/uppercaseLetter';
-import { kebabToNormal } from '@/utils/kebabToNormal';
 
 interface PlayerOverlayProps {
   isPlaying: boolean;
@@ -47,10 +38,7 @@ interface PlayerOverlayProps {
   volume: number;
   duration: number;
   timePlayed: number;
-  currentEps: string;
   vidResolution: string;
-  animeTitle: string;
-  animeDesc: string;
   resolutionList: AnimeStreamSources[];
   onClick: () => void;
   handleSeekMouseDown: () => void;
@@ -69,7 +57,6 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
   volume,
   duration,
   timePlayed,
-  currentEps,
   vidResolution,
   resolutionList,
   onClick,
@@ -80,7 +67,6 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
   handleResolutionChange,
   handleFullScreen,
 }) => {
-  const { slug } = useParams();
   const isIdle = useIdle(1000);
 
   const getBackgroundSize = (isVol = false) => {
@@ -94,6 +80,125 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
 
   return (
     <div
+      className="w-full h-full flex items-end absolute bottom-0 z-10"
+      onClick={onClick}
+    >
+      <AnimatePresence>
+        {!checkIsPlaying && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className={`px-2 w-full ${
+              !checkIsPlaying ? 'player-gradient' : ''
+            }`}
+          >
+            <div className="text-sm pt-2">
+              {convertSec(timePlayed || 0)} / {convertSec(duration || 0)}
+            </div>
+            <div className="w-full flex items-center gap-1 ">
+              <IconButton>
+                {isPlaying ? (
+                  <FaPause size={16} className="cursor-pointer" />
+                ) : (
+                  <FaPlay size={16} className="cursor-pointer" />
+                )}
+              </IconButton>
+              <input
+                type="range"
+                min="0"
+                max="0.99999"
+                step="any"
+                className="w-full cursor-pointer slider-player"
+                style={getBackgroundSize()}
+                value={played}
+                onChange={handleSeekChange}
+                onMouseDown={handleSeekMouseDown}
+                onMouseUp={handleSeekMouseUp}
+              />
+              <HoverCard openDelay={100}>
+                <HoverCardTrigger onClick={(e) => e.stopPropagation()}>
+                  <IconButton>
+                    <FaVolumeDown size={20} className="cursor-pointer" />
+                  </IconButton>
+                </HoverCardTrigger>
+                <HoverCardContent onClick={(e) => e.stopPropagation()}>
+                  <input
+                    type="range"
+                    value={volume}
+                    min={0}
+                    max={1}
+                    step={0.0001}
+                    onClick={(e) => e.stopPropagation()}
+                    style={getBackgroundSize(true)}
+                    className="slider-vol w-full"
+                    onChange={handleVolumeChange}
+                  />
+                </HoverCardContent>
+              </HoverCard>
+              <Dialog>
+                <DialogTrigger onClick={(e) => e.stopPropagation()}>
+                  <IoSettingsSharp size={16} />
+                </DialogTrigger>
+                <DialogContent
+                  className="max-w-[300px]"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <DialogHeader>
+                    <DialogTitle>Resolution</DialogTitle>
+                    <DialogDescription>
+                      <Select
+                        value={vidResolution}
+                        onValueChange={handleResolutionChange}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="480p" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {resolutionList?.map((item, idx) => (
+                            <SelectItem key={idx} value={String(idx)}>
+                              {item.quality}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </DialogDescription>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
+              <IconButton>
+                {isFullScreen ? (
+                  <MdFullscreenExit
+                    size={22}
+                    className="cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleFullScreen();
+                    }}
+                  />
+                ) : (
+                  <MdFullscreen
+                    size={22}
+                    className="cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleFullScreen();
+                    }}
+                  />
+                )}
+              </IconButton>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+export default PlayerOverlay;
+
+{
+  /* <div
       className="absolute h-screen w-full p-10 z-40"
       style={{ backgroundColor: !checkIsPlaying ? 'rgba(0, 0, 0, 0.35)' : '' }}
       onClick={onClick}
@@ -258,8 +363,5 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
-  );
-};
-
-export default PlayerOverlay;
+    </div> */
+}

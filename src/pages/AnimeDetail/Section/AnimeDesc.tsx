@@ -60,7 +60,7 @@ const AnimeDesc: FC<AnimeDescProps> = ({
             </h4>
             <Badge
               className={`${
-                status === 'ongoing' ? 'bg-yellow-300' : 'bg-green-500'
+                status === 'Ongoing' ? 'bg-yellow-300' : 'bg-green-500'
               }  text-black my-1`}
             >
               {status}

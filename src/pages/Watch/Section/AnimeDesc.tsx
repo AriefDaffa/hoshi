@@ -1,0 +1,55 @@
+import type { FC } from 'react';
+
+import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+import type { AnimeInfoData } from '@/services/anime/getAnimeInfo/types';
+import { Badge } from '@/components/ui/badge';
+
+interface AnimeDescProps extends AnimeInfoData {
+  currentEps: string;
+}
+
+const AnimeDesc: FC<AnimeDescProps> = ({
+  title,
+  description,
+  genres,
+  releaseDate,
+  status,
+  totalEpisodes,
+  currentEps,
+}) => {
+  return (
+    <div className="p-2 w-full">
+      <Badge className="bg-red-600">Episode {currentEps}</Badge>
+      <h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight my-1 sm:text-4xl lg:text-5xl">
+        {title}
+      </h1>
+      <p className="leading-6 text-justify line-clamp-6 text-sm">
+        {description}
+      </p>
+      <Table className="my-2">
+        <TableBody>
+          <TableRow>
+            <TableCell>Release Date</TableCell>
+            <TableCell className="text-right">{releaseDate}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Status</TableCell>
+            <TableCell className="text-right">{status}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Total Episode</TableCell>
+            <TableCell className="text-right">{totalEpisodes}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Genres</TableCell>
+            <TableCell className="text-right w-[200px]">
+              {genres.join(', ')}
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </div>
+  );
+};
+
+export default AnimeDesc;
