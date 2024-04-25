@@ -31,13 +31,13 @@ const EpisodeList: FC<EpisodeListProps> = ({ currentEps, episodes }) => {
         {episodes.map((item, idx) => (
           <div
             className={`w-full h-44 rounded-md flex items-center justify-center bg-black relative hover:bg-white hover:text-black ${
-              String(idx + 1) === currentEps
+              String(item.number) === currentEps
                 ? 'bg-white text-black cursor-default'
                 : 'cursor-pointer'
             }`}
             key={idx}
             onClick={
-              String(idx + 1) === currentEps
+              String(item.number) === currentEps
                 ? () => {}
                 : () => handleOnEpsClick(item.id)
             }
@@ -45,7 +45,7 @@ const EpisodeList: FC<EpisodeListProps> = ({ currentEps, episodes }) => {
             <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
               {item.number}
             </h1>
-            {String(idx + 1) === currentEps && (
+            {String(item.number) === currentEps && (
               <Badge className="text-white absolute flex self-center bottom-4 w-min">
                 Watching
               </Badge>
