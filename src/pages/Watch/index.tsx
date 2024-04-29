@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ReactPlayer from 'react-player';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useFullscreen } from '@mantine/hooks';
+import { useFullscreen, useLocalStorage } from '@mantine/hooks';
 import { useEffect, useRef, useState } from 'react';
 import type { ChangeEvent, FC } from 'react';
 import type { OnProgressProps } from 'react-player/base';
@@ -25,12 +25,19 @@ const Watch: FC<WatchProps> = () => {
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [isBuffer, setIsBuffer] = useState(false);
-  const [vidResolution, setVidResolution] = useState('0');
   const [played, setPlayed] = useState(0);
-  const [volume, setVolume] = useState(0.6);
   const [isSeeking, setIsSeeking] = useState(false);
   const [secondPlayed, setSecondPlayed] = useState(0);
   const [duration, setDuration] = useState(0);
+
+  const [vidResolution, setVidResolution] = useLocalStorage({
+    key: 'hoshi-vid-res',
+    defaultValue: '0',
+  });
+  const [volume, setVolume] = useLocalStorage({
+    key: 'hoshi-vid-vol',
+    defaultValue: 0.6,
+  });
 
   const checkSlug = typeof slug === 'string' ? slug : '';
   const checkID = typeof id === 'string' ? id : '';
