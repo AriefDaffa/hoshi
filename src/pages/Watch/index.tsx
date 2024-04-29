@@ -34,12 +34,18 @@ const Watch: FC<WatchProps> = () => {
 
   const idSplit = checkID.split('-');
 
-  const { data: animeInfo, isLoading: isAnimeInfoLoading } = useGetAnimeInfo({
+  const {
+    data: animeInfo,
+    isLoading: isAnimeInfoLoading,
+    isError: isAnimeInfoError,
+  } = useGetAnimeInfo({
     id: checkSlug,
   });
-  const { data: streamURL, isLoading: isAnimeStreamURL } = useGetAnimeStreamURL(
-    { id: checkID }
-  );
+  const {
+    data: streamURL,
+    isLoading: isAnimeStreamURLLoading,
+    isError: isAnimeStreamURLError,
+  } = useGetAnimeStreamURL({ id: checkID });
 
   const currentEps = idSplit[idSplit.length - 1] || '';
 
@@ -84,11 +90,17 @@ const Watch: FC<WatchProps> = () => {
   useEffect(() => {
     if (
       (!isAnimeInfoLoading && animeInfo.episodes.length === 0) ||
-      (!isAnimeStreamURL && streamURL.sources.length === 0)
+      (!isAnimeStreamURLLoading && streamURL.sources.length === 0)
     ) {
       navigate('/search');
     }
-  }, [animeInfo, isAnimeInfoLoading, isAnimeStreamURL, navigate, streamURL]);
+  }, [
+    animeInfo,
+    isAnimeInfoLoading,
+    isAnimeStreamURLLoading,
+    navigate,
+    streamURL,
+  ]);
 
   console.log(isBuffer);
 
@@ -137,13 +149,19 @@ const Watch: FC<WatchProps> = () => {
               onDuration={(e) => setDuration(e)}
             />
           </div>
-          {!isAnimeInfoLoading && (
-            <AnimeDesc {...animeInfo} currentEps={currentEps} />
-          )}
+          <AnimeDesc
+            {...animeInfo}
+            currentEps={currentEps}
+            isLoading={isAnimeInfoLoading}
+            isError={isAnimeInfoError}
+          />
         </div>
-        {!isAnimeInfoLoading && (
-          <EpisodeList episodes={animeInfo.episodes} currentEps={currentEps} />
-        )}
+        <EpisodeList
+          episodes={animeInfo.episodes}
+          currentEps={currentEps}
+          isLoading={isAnimeStreamURLLoading}
+          isError={isAnimeStreamURLError}
+        />
       </div>
     </Layout>
   );

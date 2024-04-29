@@ -26,9 +26,12 @@ const useGetAnimeStreamURL = ({
   id,
 }: UseGetAnimeStreamURLProps): AnimeStreamResponse => {
   const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
   const [data, setData] = useState(defaultVal);
 
   const fetchData = useCallback(async () => {
+    setIsError(false);
+
     try {
       const req = await getAnimeStreamURL({ episodeID: id });
 
@@ -40,10 +43,12 @@ const useGetAnimeStreamURL = ({
         setData(response);
       } else {
         setData(defaultVal);
+        setIsError(true);
       }
     } catch (error) {
       setData(defaultVal);
       setIsLoading(false);
+      setIsError(true);
     }
   }, [id]);
 
@@ -54,8 +59,8 @@ const useGetAnimeStreamURL = ({
   }, [fetchData, id]);
 
   return useMemo(() => {
-    return { data, isLoading };
-  }, [data, isLoading]);
+    return { data, isLoading, isError };
+  }, [data, isLoading, isError]);
 };
 
 export default useGetAnimeStreamURL;

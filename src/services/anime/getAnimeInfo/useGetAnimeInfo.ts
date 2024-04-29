@@ -21,9 +21,12 @@ const defaultVal = {
 
 const useGetAnimeInfo = ({ id }: UseGetSearchInfoProps): AnimeInfoResponse => {
   const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
   const [data, setData] = useState(defaultVal);
 
   const fetchData = useCallback(async () => {
+    setIsError(false);
+
     try {
       const req = await getAnimeInfo({ id });
 
@@ -35,10 +38,12 @@ const useGetAnimeInfo = ({ id }: UseGetSearchInfoProps): AnimeInfoResponse => {
         setData(response);
       } else {
         setData(defaultVal);
+        setIsError(true);
       }
     } catch (error) {
       setData(defaultVal);
       setIsLoading(false);
+      setIsError(true);
     }
   }, [id]);
 
@@ -49,8 +54,8 @@ const useGetAnimeInfo = ({ id }: UseGetSearchInfoProps): AnimeInfoResponse => {
   }, [fetchData, id]);
 
   return useMemo(() => {
-    return { data, isLoading };
-  }, [data, isLoading]);
+    return { data, isLoading, isError };
+  }, [data, isError, isLoading]);
 };
 
 export default useGetAnimeInfo;

@@ -31,4 +31,5 @@ export interface AnimeInfoData {
 export interface AnimeInfoResponse {
   data: AnimeInfoData;
   isLoading: boolean;
+  isError: boolean;
 }

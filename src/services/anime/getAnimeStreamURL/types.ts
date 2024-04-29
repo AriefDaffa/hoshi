@@ -22,4 +22,5 @@ export interface AnimeStreamData {
 export interface AnimeStreamResponse {
   data: AnimeStreamData;
   isLoading: boolean;
+  isError: boolean;
 }

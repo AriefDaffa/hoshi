@@ -14,7 +14,7 @@ const HeroSection: FC<HeroSectionProps> = () => {
       className="text-center h-[40vh] flex justify-center items-center my-5 mx-2 relative"
     >
       <div className="absolute  ">
-        <h1 className="scroll-m-20 text-4xl font-medium tracking-tight lg:text-5xl">
+        <h1 className="scroll-m-20 text-3xl font-medium tracking-tight sm:text-4xl lg:text-5xl">
           Watching anime <br /> never been this{' '}
           <span className="text-bluePrimary">easy</span>
         </h1>
