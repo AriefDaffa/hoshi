@@ -107,12 +107,14 @@ const Watch: FC<WatchProps> = () => {
   return (
     <Layout>
       <div
-        className={`w-full h-full ${isFullScreen ? '' : ' lg:flex lg:gap-4'}`}
+        className={`w-full h-full ${
+          isFullScreen ? '' : ' lg:flex lg:gap-4'
+        } overflow-x-hidden`}
       >
         <div className={` ${isFullScreen ? '' : 'lg:w-2/3 pt-2'} `}>
           <div
             className={`relative  ${
-              isFullScreen ? '' : 'w-full h-full lg:h-[70vh]'
+              isFullScreen ? 'w-screen h-screen' : 'w-full h-full lg:h-[70vh]'
             }`}
           >
             <PlayerOverlay
