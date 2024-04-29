@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ReactPlayer from 'react-player';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useFullscreen } from '@mantine/hooks';
@@ -12,6 +13,8 @@ import useGetAnimeStreamURL from '@/services/anime/getAnimeStreamURL/useGetAnime
 import Layout from '@/components/Layout';
 
 import AnimeDesc from './Section/AnimeDesc';
+import BufferLoader from './Section/BufferLoader';
+
 interface WatchProps {}
 
 const Watch: FC<WatchProps> = () => {
@@ -74,7 +77,6 @@ const Watch: FC<WatchProps> = () => {
     setIsSeeking(true);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSeekMouseUp = (e: any) => {
     setIsSeeking(false);
 
@@ -102,8 +104,6 @@ const Watch: FC<WatchProps> = () => {
     streamURL,
   ]);
 
-  console.log(isBuffer);
-
   return (
     <Layout>
       <div
@@ -117,6 +117,7 @@ const Watch: FC<WatchProps> = () => {
               isFullScreen ? 'w-screen h-screen' : 'w-full h-full lg:h-[70vh]'
             }`}
           >
+            {isBuffer && <BufferLoader />}
             <PlayerOverlay
               duration={duration}
               isPlaying={isPlaying}
