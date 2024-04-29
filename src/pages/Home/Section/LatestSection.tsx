@@ -13,7 +13,7 @@ const LatestSection: FC<LatestSectionProps> = ({ data, isLoading }) => {
       <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
         Latest Updated
       </h3>
-      <div className="grid grid-cols-1 gap-2 mt-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+      <div className="grid grid-cols-2 gap-2 mt-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {isLoading
           ? Array.from(Array(10), (_, i) => (
               <div key={i} className="h-[482px] border rounded-lg">
@@ -34,7 +34,7 @@ const LatestSection: FC<LatestSectionProps> = ({ data, isLoading }) => {
                 <img
                   src={item.image}
                   alt=""
-                  className="w-full h-96 object-cover rounded-t-lg"
+                  className="w-full h-52 object-cover rounded-t-lg sm:h-96"
                 />
                 <div className="text-center bg-red-600 rounded-l-lg font-bold py-1 absolute top-4 right-0 px-2">
                   Episode {item.episodeNumber}
@@ -42,11 +42,6 @@ const LatestSection: FC<LatestSectionProps> = ({ data, isLoading }) => {
                 <div className="text-center bg-bluePrimary rounded-b-lg font-bold py-1 line-clamp-1">
                   {item.title}
                 </div>
-                {/* <div className="p-2">
-                  <p className="text-base font-semibold line-clamp-2">
-                    {item.title}
-                  </p>
-                </div> */}
               </div>
             ))}
       </div>
