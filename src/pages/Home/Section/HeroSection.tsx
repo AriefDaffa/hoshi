@@ -16,7 +16,7 @@ const HeroSection: FC<HeroSectionProps> = () => {
       <div className="absolute  ">
         <h1 className="scroll-m-20 text-3xl font-medium tracking-tight sm:text-4xl lg:text-5xl">
           Watching anime <br /> never been this{' '}
-          <span className="text-bluePrimary">easy</span>
+          <span className="text-primary-blue">easy</span>
         </h1>
         <p className="leading-7 text-muted-foreground [&:not(:first-child)]:mt-2">
           find your favorite anime, or browse trending and latest anime below.

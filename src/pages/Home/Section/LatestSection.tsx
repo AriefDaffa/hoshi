@@ -39,7 +39,7 @@ const LatestSection: FC<LatestSectionProps> = ({ data, isLoading }) => {
                 <div className="text-center bg-red-600 rounded-l-lg font-bold py-1 absolute top-4 right-0 px-2">
                   Episode {item.episodeNumber}
                 </div>
-                <div className="text-center bg-bluePrimary rounded-b-lg font-bold py-1 line-clamp-1">
+                <div className="text-center bg-primary-blue text-black rounded-b-lg font-semibold py-1 line-clamp-1">
                   {item.title}
                 </div>
               </div>

@@ -49,7 +49,7 @@ const TrendingSection: FC<TrendingSectionProps> = ({ data, isLoading }) => {
                   </div>
                   <div className="w-full">
                     <div className="flex gap-2">
-                      <Badge className="bg-yellow-600">
+                      <Badge className="bg-primary-blue text-black font-semibold">
                         Current Episode: {item.episodeNumber}
                       </Badge>
                     </div>
