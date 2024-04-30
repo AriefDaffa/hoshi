@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { FaVolumeDown } from 'react-icons/fa';
 import { FaPlay, FaPause } from 'react-icons/fa6';
 import { MdFullscreen, MdFullscreenExit } from 'react-icons/md';
@@ -23,11 +23,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/components/ui/hover-card';
 import { convertSec } from '@/utils/convertSec';
 import type { AnimeStreamSources } from '@/services/anime/getAnimeStreamURL/types';
 
@@ -67,6 +62,8 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
   handleResolutionChange,
   handleFullScreen,
 }) => {
+  const [openVolume, setOpenVolume] = useState(false);
+
   const isIdle = useIdle(1000);
 
   const getBackgroundSize = (isVol = false) => {
@@ -116,26 +113,38 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
                 onMouseDown={handleSeekMouseDown}
                 onMouseUp={handleSeekMouseUp}
               />
-              <HoverCard openDelay={100}>
-                <HoverCardTrigger onClick={(e) => e.stopPropagation()}>
-                  <IconButton>
-                    <FaVolumeDown size={20} className="cursor-pointer" />
-                  </IconButton>
-                </HoverCardTrigger>
-                <HoverCardContent onClick={(e) => e.stopPropagation()}>
-                  <input
-                    type="range"
-                    value={volume}
-                    min={0}
-                    max={1}
-                    step={0.0001}
-                    onClick={(e) => e.stopPropagation()}
-                    style={getBackgroundSize(true)}
-                    className="slider-vol w-full"
-                    onChange={handleVolumeChange}
-                  />
-                </HoverCardContent>
-              </HoverCard>
+              <div
+                className="relative"
+                onMouseEnter={() => setOpenVolume(true)}
+                onMouseLeave={() => setOpenVolume(false)}
+              >
+                <IconButton>
+                  <FaVolumeDown size={20} className="cursor-pointer" />
+                </IconButton>
+                <AnimatePresence>
+                  {openVolume && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="p-2 rounded-md bg-black absolute bottom-full w-[200px] right-0"
+                    >
+                      <input
+                        type="range"
+                        value={volume}
+                        min={0}
+                        max={1}
+                        step={0.0001}
+                        onClick={(e) => e.stopPropagation()}
+                        style={getBackgroundSize(true)}
+                        className="slider-vol w-full"
+                        onChange={handleVolumeChange}
+                        aria-orientation="vertical"
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
               <Dialog>
                 <DialogTrigger onClick={(e) => e.stopPropagation()}>
                   <IoSettingsSharp size={16} />
