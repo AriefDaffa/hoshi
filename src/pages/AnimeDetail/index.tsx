@@ -46,9 +46,9 @@ const AnimeDetail: FC<AnimeDetailProps> = () => {
       {!isLoading ? (
         <div className="w-full h-full mb-4 text-center px-2">
           <AnimeDetailBreadcrumb id={checkID} />
-          <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight my-2 lg:text-5xl px-2 text-left">
+          {/* <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight my-2 lg:text-5xl px-2 text-left">
             Anime Details
-          </h1>
+          </h1> */}
           <AnimeDesc {...data} />
           <AnimeEpisodeList
             {...data}

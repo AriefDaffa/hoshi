@@ -17,7 +17,7 @@ interface AnimeDetailBreadcrumbProps {
 
 const AnimeDetailBreadcrumb: FC<AnimeDetailBreadcrumbProps> = ({ id = '' }) => {
   return (
-    <Breadcrumb className="mt-6 px-2">
+    <Breadcrumb className="mt-4 px-2">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="/search">Search</BreadcrumbLink>

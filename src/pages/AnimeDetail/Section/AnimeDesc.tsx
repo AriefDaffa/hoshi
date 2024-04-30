@@ -15,12 +15,12 @@ const AnimeDesc: FC<AnimeDescProps> = ({
   status,
 }) => {
   return (
-    <div className="flex flex-col gap-4 items-end w-full lg:flex-row">
+    <div className="flex flex-col gap-4 items-end w-full mt-4 lg:flex-row">
       <div className="h-full w-full rounded-md lg:w-2/4">
         <img
           src={image}
           alt=""
-          className="h-full w-full object-cover rounded-md"
+          className="h-[80vh] w-full object-cover rounded-md"
         />
       </div>
       <div className="h-full w-full text-left">
