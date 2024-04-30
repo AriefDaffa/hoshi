@@ -30,6 +30,7 @@ const useGetAnimeStreamURL = ({
   const [data, setData] = useState(defaultVal);
 
   const fetchData = useCallback(async () => {
+    setIsLoading(true);
     setIsError(false);
 
     try {

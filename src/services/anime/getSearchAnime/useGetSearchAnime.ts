@@ -20,6 +20,7 @@ const useGetSearchAnime = ({
   const [data, setData] = useState<AnimeSearchData>(defaultVal);
 
   const fetchData = useCallback(async () => {
+    setIsLoading(true);
     try {
       const req = await getSearchAnime({ keyword });
 

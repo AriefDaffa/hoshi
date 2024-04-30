@@ -1,25 +1,49 @@
 import { useNavigate } from 'react-router-dom';
 import { FaSearch } from 'react-icons/fa';
+import { IoIosClose } from 'react-icons/io';
+import { useClickOutside, useDebouncedState } from '@mantine/hooks';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useState } from 'react';
+import type { ChangeEvent, FC } from 'react';
 
-import type { FC } from 'react';
+import { Input } from './ui/input';
+import useGetSearchAnime from '@/services/anime/getSearchAnime/useGetSearchAnime';
+import { Badge } from './ui/badge';
+import { ScrollArea } from './ui/scroll-area';
 
 interface NavbarProps {}
 
 const Navbar: FC<NavbarProps> = () => {
+  const [openModal, setOpenModal] = useState(false);
+  const [dirtyKeyword, setDirtyKeyword] = useState('');
+
+  const [keyword, setKeyword] = useDebouncedState('', 500);
+  const ref = useClickOutside(() => setOpenModal(false));
   const navigate = useNavigate();
+
+  const { data, isLoading } = useGetSearchAnime({ keyword });
+
+  const handleOpenModal = () => {
+    setOpenModal(!openModal);
+  };
 
   const navigateHome = () => {
     navigate('/');
   };
 
-  const navigateSearch = () => {
-    navigate('/search');
+  const navigateSearch = (id: string) => {
+    navigate(`/search/${id}`);
+  };
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setKeyword(e.target.value);
+    setDirtyKeyword(e.target.value);
   };
 
   return (
     <div className="sticky top-0 w-full bg-[#09090B] z-50">
-      <div className="h-14 border-b-[1px] flex justify-center w-full">
-        <div className="flex justify-between items-center h-full px-4 w-full max-w-screen-xl">
+      <div className="h-14 border-b-[1px] flex justify-center w-full ">
+        <div className="flex justify-between items-center h-full px-4 w-full max-w-screen-xl relative">
           <div
             className="flex items-center gap-2 cursor-pointer"
             onClick={navigateHome}
@@ -28,15 +52,78 @@ const Navbar: FC<NavbarProps> = () => {
           </div>
           <div>
             <div
-              className="bg-primary py-2 px-4 rounded-md text-muted-foreground flex justify-center items-center gap-4 cursor-pointer"
-              onClick={navigateSearch}
+              className="flex items-center md:border rounded-md pr-2"
+              onClick={handleOpenModal}
             >
-              <span className="hidden text-sm sm:block">
-                Click here to search...
-              </span>
-              <FaSearch size={18} />
+              <Input
+                placeholder="Click here to search"
+                className="border-0 focus-visible:ring-0 hidden md:block"
+                value={dirtyKeyword}
+                onChange={handleInputChange}
+              />
+              <FaSearch />
             </div>
           </div>
+          <AnimatePresence>
+            {openModal && dirtyKeyword && (
+              <motion.div
+                ref={ref}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute top-full right-0 h-screen w-full bg-black p-2 rounded-md md:h-[350px] md:max-w-[400px]"
+              >
+                <div className="w-full flex justify-end items-center md:hidden">
+                  <IoIosClose size={24} onClick={handleOpenModal} />
+                </div>
+                <label className="md:hidden">Search Anime</label>
+                <div className="flex items-center rounded-md pr-2 border mt-1 md:border-none">
+                  <Input
+                    placeholder="Type here to search"
+                    className="border-0 focus-visible:ring-0 block md:hidden"
+                    value={dirtyKeyword}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="pt-2 h-full md:pt-0">
+                  {!isLoading && (
+                    <ScrollArea className="h-[70vh] md:h-[320px]">
+                      {data.results.map((item, idx) => (
+                        <div
+                          key={idx}
+                          onClick={() => navigateSearch(item.id)}
+                          className="flex gap-2 items-end cursor-pointer p-2 border-md hover:bg-primary"
+                        >
+                          <img
+                            src={item.image}
+                            alt=""
+                            className="h-28 w-20 rounded-md"
+                          />
+                          <div>
+                            {(item.subOrDub === 'sub' ||
+                              item.subOrDub === 'dub') && (
+                              <Badge
+                                className={`${
+                                  item.subOrDub === 'sub'
+                                    ? 'bg-red-500'
+                                    : 'bg-bluePrimary'
+                                }`}
+                              >
+                                {item.subOrDub === 'sub'
+                                  ? 'Subtitle'
+                                  : 'Dubbing'}
+                              </Badge>
+                            )}
+                            <div>{item.title}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </ScrollArea>
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>
