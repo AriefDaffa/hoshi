@@ -1,5 +1,4 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { useEffect, useState } from 'react';
 import type { ChangeEvent, FC } from 'react';
 
@@ -9,6 +8,7 @@ import useGetAnimeInfo from '@/services/anime/getAnimeInfo/useGetAnimeInfo';
 import AnimeDetailBreadcrumb from './Section/AnimeDetailBreadcrumb';
 import AnimeDesc from './Section/AnimeDesc';
 import AnimeEpisodeList from './Section/AnimeEpisodeList';
+import Loader from '@/components/Loader';
 
 interface AnimeDetailProps {}
 
@@ -60,9 +60,7 @@ const AnimeDetail: FC<AnimeDetailProps> = () => {
           />
         </div>
       ) : (
-        <div className="w-full flex items-center justify-center">
-          <AiOutlineLoading3Quarters size={46} className="animate-spin" />
-        </div>
+        <Loader />
       )}
     </Layout>
   );
