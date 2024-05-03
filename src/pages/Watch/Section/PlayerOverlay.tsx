@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { FaVolumeDown } from 'react-icons/fa';
 import { FaPlay, FaPause } from 'react-icons/fa6';
 import { MdFullscreen, MdFullscreenExit } from 'react-icons/md';
+import { TbSquareRounded } from 'react-icons/tb';
 import { IoSettingsSharp } from 'react-icons/io5';
 import { useIdle } from '@mantine/hooks';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -23,8 +24,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+
 import { convertSec } from '@/utils/convertSec';
 import type { AnimeStreamSources } from '@/services/anime/getAnimeStreamURL/types';
+import TooltipHover from '@/components/TooltipHover';
 
 interface PlayerOverlayProps {
   isPlaying: boolean;
@@ -42,6 +45,7 @@ interface PlayerOverlayProps {
   handleResolutionChange: (e: string) => void;
   handleSeekChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleVolumeChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleWideOnClick: () => void;
   handleFullScreen: () => void;
 }
 
@@ -60,6 +64,7 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
   handleSeekChange,
   handleVolumeChange,
   handleResolutionChange,
+  handleWideOnClick,
   handleFullScreen,
 }) => {
   const [openVolume, setOpenVolume] = useState(false);
@@ -93,7 +98,10 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
             <div className="text-sm pt-2">
               {convertSec(timePlayed || 0)} / {convertSec(duration || 0)}
             </div>
-            <div className="w-full flex items-center gap-1 ">
+            <div
+              className="w-full flex items-center gap-1 "
+              onClick={(e) => e.stopPropagation()}
+            >
               <IconButton>
                 {isPlaying ? (
                   <FaPause size={16} className="cursor-pointer" />
@@ -146,13 +154,14 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
                 </AnimatePresence>
               </div>
               <Dialog>
-                <DialogTrigger onClick={(e) => e.stopPropagation()}>
-                  <IoSettingsSharp size={16} />
+                <DialogTrigger className="h-full flex items-center">
+                  <TooltipHover tooltipContent={'Settings'}>
+                    <IconButton>
+                      <IoSettingsSharp size={16} />
+                    </IconButton>
+                  </TooltipHover>
                 </DialogTrigger>
-                <DialogContent
-                  className="max-w-[300px]"
-                  onClick={(e) => e.stopPropagation()}
-                >
+                <DialogContent className="max-w-[300px]">
                   <DialogHeader>
                     <DialogTitle>Resolution</DialogTitle>
                     <DialogDescription>
@@ -175,27 +184,34 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
                   </DialogHeader>
                 </DialogContent>
               </Dialog>
-              <IconButton>
-                {isFullScreen ? (
-                  <MdFullscreenExit
-                    size={22}
-                    className="cursor-pointer"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleFullScreen();
-                    }}
-                  />
-                ) : (
-                  <MdFullscreen
-                    size={22}
-                    className="cursor-pointer"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleFullScreen();
-                    }}
-                  />
-                )}
-              </IconButton>
+              <TooltipHover tooltipContent={'Wide View'}>
+                <IconButton onClick={handleWideOnClick}>
+                  <TbSquareRounded size={22} />
+                </IconButton>
+              </TooltipHover>
+              <TooltipHover tooltipContent={'Fullscreen'}>
+                <IconButton>
+                  {isFullScreen ? (
+                    <MdFullscreenExit
+                      size={22}
+                      className="cursor-pointer"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleFullScreen();
+                      }}
+                    />
+                  ) : (
+                    <MdFullscreen
+                      size={22}
+                      className="cursor-pointer"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleFullScreen();
+                      }}
+                    />
+                  )}
+                </IconButton>
+              </TooltipHover>
             </div>
           </motion.div>
         )}

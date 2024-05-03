@@ -71,7 +71,7 @@ const Navbar: FC<NavbarProps> = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="absolute top-full right-0 h-screen w-full bg-black p-2 rounded-md md:h-[350px] md:max-w-[400px]"
+                className="absolute top-full right-0 h-screen w-full bg-[#09090B] border p-2 rounded-md md:top-[120%] md:h-[350px] md:max-w-[400px]"
               >
                 <div className="w-full flex justify-end items-center md:hidden">
                   <IoIosClose size={24} onClick={handleOpenModal} />

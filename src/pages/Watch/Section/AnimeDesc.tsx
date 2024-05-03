@@ -48,7 +48,7 @@ const AnimeDesc: FC<AnimeDescProps> = ({
               </TableRow>
               <TableRow>
                 <TableCell>Genres</TableCell>
-                <TableCell className="text-right w-[200px]">
+                <TableCell className="text-right w-1/2">
                   {genres.join(', ')}
                 </TableCell>
               </TableRow>

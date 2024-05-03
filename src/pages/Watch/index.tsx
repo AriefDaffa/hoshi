@@ -25,8 +25,9 @@ const Watch: FC<WatchProps> = () => {
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [isBuffer, setIsBuffer] = useState(false);
-  const [played, setPlayed] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
+  const [isWide, setIsWide] = useState(false);
+  const [played, setPlayed] = useState(0);
   const [secondPlayed, setSecondPlayed] = useState(0);
   const [duration, setDuration] = useState(0);
 
@@ -67,6 +68,10 @@ const Watch: FC<WatchProps> = () => {
 
   const handlePlayer = () => {
     setIsPlaying(!isPlaying);
+  };
+
+  const handleWide = () => {
+    setIsWide(!isWide);
   };
 
   const handleProgress = (e: OnProgressProps) => {
@@ -115,15 +120,23 @@ const Watch: FC<WatchProps> = () => {
     <Layout>
       <div
         className={`w-full h-full ${
-          isFullScreen ? '' : ' lg:flex lg:gap-4'
+          isFullScreen
+            ? ''
+            : `${isWide ? 'lg:flex-col' : 'lg:flex-row'} lg:flex lg:gap-4`
         } overflow-x-hidden`}
       >
-        <div className={` ${isFullScreen ? '' : 'lg:w-2/3 pt-2'} `}>
+        <div
+          className={` ${
+            isFullScreen ? '' : `${isWide ? 'lg:w-full' : 'lg:w-2/3'} pt-2`
+          } `}
+        >
           <div
             className={`relative  ${
               isFullScreen
                 ? 'w-screen h-screen'
-                : 'w-full h-full min-h-[30vh] lg:h-[70vh] lg:max-h-[500px]'
+                : `w-full h-full lg:min-h-[30vh] lg:h-[70vh] ${
+                    isWide ? 'lg:max-h-[760px]' : 'lg:max-h-[500px]'
+                  } `
             }`}
           >
             {isBuffer && <BufferLoader />}
@@ -143,6 +156,7 @@ const Watch: FC<WatchProps> = () => {
               handleSeekChange={handleSeekChange}
               handleVolumeChange={handleVolumeChange}
               handleResolutionChange={handleResolutionChange}
+              handleWideOnClick={handleWide}
             />
             <ReactPlayer
               key={`${slug}-${id}`}
@@ -169,8 +183,9 @@ const Watch: FC<WatchProps> = () => {
           />
         </div>
         <EpisodeList
-          episodes={animeInfo.episodes}
           currentEps={currentEps}
+          episodes={animeInfo.episodes}
+          isWide={isWide}
           isLoading={isAnimeStreamURLLoading}
           isError={isAnimeStreamURLError}
         />

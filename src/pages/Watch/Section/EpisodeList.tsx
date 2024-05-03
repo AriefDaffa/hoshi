@@ -9,6 +9,7 @@ interface EpisodeListProps {
   currentEps: string;
   isLoading: boolean;
   isError: boolean;
+  isWide: boolean;
   episodes: Episodes[];
 }
 
@@ -17,6 +18,7 @@ const EpisodeList: FC<EpisodeListProps> = ({
   episodes,
   isLoading,
   isError,
+  isWide,
 }) => {
   const { slug } = useParams();
   const { fullscreen: isFullScreen } = useFullscreen();
@@ -26,7 +28,11 @@ const EpisodeList: FC<EpisodeListProps> = ({
   };
 
   return (
-    <div className={`w-full px-2 ${isFullScreen ? '' : 'lg:w-1/3'} `}>
+    <div
+      className={`w-full px-2 ${
+        isFullScreen ? '' : `${isWide ? 'lg:w-full' : 'lg:w-1/3'}`
+      } `}
+    >
       <h4 className="scroll-m-20 text-xl font-semibold tracking-tight mt-4 mb-2">
         List Episode
       </h4>
@@ -74,34 +80,3 @@ const EpisodeList: FC<EpisodeListProps> = ({
 };
 
 export default EpisodeList;
-
-{
-  /* <SheetContent>
-<SheetHeader>
-  <SheetTitle>Episode Lists</SheetTitle>
-  <SheetDescription>Choose episode below</SheetDescription>
-</SheetHeader>
-<ScrollArea className="mt-2 h-[92vh]">
-  {episodes.map((item, idx) => (
-    <div
-      key={idx}
-      onClick={
-        currentEps === String(item.number)
-          ? () => {}
-          : () => (window.location.href = `/watch/${slug}/${item.id}`)
-      }
-      className={`px-3 py-4 my-2 cursor-pointer ${
-        currentEps === String(item.number) && 'bg-primary'
-      } hover:bg-primary rounded-md`}
-    >
-      <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight flex items-center gap-2">
-        Episode {item.number}{' '}
-        {currentEps === String(item.number) && (
-          <Badge variant="secondary">Curently watching</Badge>
-        )}
-      </h3>
-    </div>
-  ))}
-</ScrollArea>
-</SheetContent> */
-}
