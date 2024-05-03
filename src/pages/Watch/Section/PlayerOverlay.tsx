@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { FaVolumeDown } from 'react-icons/fa';
 import { FaPlay, FaPause } from 'react-icons/fa6';
 import { MdFullscreen, MdFullscreenExit } from 'react-icons/md';
@@ -71,6 +71,8 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
 
   const isIdle = useIdle(1000);
 
+  const inputRef = useRef(null);
+
   const getBackgroundSize = (isVol = false) => {
     return { backgroundSize: `${(isVol ? volume : played) * 100}% 100%` };
   };
@@ -135,19 +137,19 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="p-2 rounded-md bg-black absolute bottom-full w-[200px] right-0"
+                      className="p-2 py-4 rounded-md absolute w-[200px] bottom-[350%] -left-[225%] rotate-[270deg] bg-black flex items-center"
                     >
                       <input
                         type="range"
                         value={volume}
+                        ref={inputRef}
                         min={0}
                         max={1}
                         step={0.0001}
                         onClick={(e) => e.stopPropagation()}
                         style={getBackgroundSize(true)}
-                        className="slider-vol w-full"
+                        className="slider-vol w-full "
                         onChange={handleVolumeChange}
-                        aria-orientation="vertical"
                       />
                     </motion.div>
                   )}
