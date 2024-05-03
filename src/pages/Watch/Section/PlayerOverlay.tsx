@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo, useRef, useState } from 'react';
 import { FaVolumeDown } from 'react-icons/fa';
 import { FaPlay, FaPause } from 'react-icons/fa6';
@@ -6,6 +7,7 @@ import { TbSquareRounded } from 'react-icons/tb';
 import { IoSettingsSharp } from 'react-icons/io5';
 import { useIdle } from '@mantine/hooks';
 import { AnimatePresence, motion } from 'framer-motion';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import type { ChangeEvent, FC } from 'react';
 
 import IconButton from '@/components/IconButton';
@@ -16,18 +18,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 import { convertSec } from '@/utils/convertSec';
-import type { AnimeStreamSources } from '@/services/anime/getAnimeStreamURL/types';
 import TooltipHover from '@/components/TooltipHover';
+import type { AnimeStreamSources } from '@/services/anime/getAnimeStreamURL/types';
 
 interface PlayerOverlayProps {
   isPlaying: boolean;
@@ -38,15 +33,16 @@ interface PlayerOverlayProps {
   timePlayed: number;
   vidResolution: string;
   resolutionList: AnimeStreamSources[];
+  server: string;
   onClick: () => void;
   handleSeekMouseDown: () => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handleSeekMouseUp: (e: any) => void;
   handleResolutionChange: (e: string) => void;
   handleSeekChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleVolumeChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleWideOnClick: () => void;
   handleFullScreen: () => void;
+  handleServerChange: (val: 'gogocdn' | 'streamsb' | 'vidstreaming') => void;
 }
 
 const PlayerOverlay: FC<PlayerOverlayProps> = ({
@@ -58,6 +54,7 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
   timePlayed,
   vidResolution,
   resolutionList,
+  server,
   onClick,
   handleSeekMouseDown,
   handleSeekMouseUp,
@@ -66,6 +63,7 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
   handleResolutionChange,
   handleWideOnClick,
   handleFullScreen,
+  handleServerChange,
 }) => {
   const [openVolume, setOpenVolume] = useState(false);
 
@@ -163,9 +161,49 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
                     </IconButton>
                   </TooltipHover>
                 </DialogTrigger>
-                <DialogContent className="max-w-[300px]">
-                  <DialogHeader>
-                    <DialogTitle>Resolution</DialogTitle>
+                <DialogContent className="max-w-[500px]">
+                  <h4 className=" text-xl font-semibold tracking-tight">
+                    Resolution
+                  </h4>
+                  <Select
+                    value={vidResolution}
+                    onValueChange={handleResolutionChange}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="480p" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {resolutionList?.map((item, idx) => (
+                        <SelectItem key={idx} value={String(idx)}>
+                          {item.quality}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                    <h4 className=" text-xl font-semibold tracking-tight">
+                      Server
+                    </h4>
+                    <ToggleGroup
+                      type="single"
+                      defaultValue="gogocdn"
+                      className="grid grid-cols-2"
+                      value={server}
+                      onValueChange={handleServerChange}
+                    >
+                      <ToggleGroupItem value="gogocdn" className="w-full">
+                        gogocdn
+                      </ToggleGroupItem>
+                      <ToggleGroupItem value="streamsb" className="w-full">
+                        streamsb
+                      </ToggleGroupItem>
+                      <ToggleGroupItem value="vidstreaming" className="w-full">
+                        vidstreaming
+                      </ToggleGroupItem>
+                    </ToggleGroup>
+                  </Select>
+                  {/* <DialogHeader>
+                    <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+                      Resolution
+                    </h4>
                     <DialogDescription>
                       <Select
                         value={vidResolution}
@@ -182,8 +220,26 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
                           ))}
                         </SelectContent>
                       </Select>
+                      <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+                        Server
+                      </h4>
+                      <Select
+                        value={vidResolution}
+                        onValueChange={handleResolutionChange}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="480p" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {resolutionList?.map((item, idx) => (
+                            <SelectItem key={idx} value={String(idx)}>
+                              {item.quality}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </DialogDescription>
-                  </DialogHeader>
+                  </DialogHeader> */}
                 </DialogContent>
               </Dialog>
               <TooltipHover tooltipContent={'Wide View'}>

@@ -1,5 +1,6 @@
 export interface GetAnimeStreamURLProps {
   episodeID: string;
+  server: string;
 }
 
 interface AnimeStreamHeaders {

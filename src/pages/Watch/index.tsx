@@ -29,6 +29,9 @@ const Watch: FC<WatchProps> = () => {
   const [played, setPlayed] = useState(0);
   const [secondPlayed, setSecondPlayed] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [server, setServer] = useState<'gogocdn' | 'streamsb' | 'vidstreaming'>(
+    'gogocdn'
+  );
 
   const [vidResolution, setVidResolution] = useLocalStorage({
     key: 'hoshi-vid-res',
@@ -59,7 +62,7 @@ const Watch: FC<WatchProps> = () => {
     data: streamURL,
     isLoading: isAnimeStreamURLLoading,
     isError: isAnimeStreamURLError,
-  } = useGetAnimeStreamURL({ id: checkID });
+  } = useGetAnimeStreamURL({ id: checkID, server });
 
   const currentEps = idSplit[idSplit.length - 1] || '';
 
@@ -75,6 +78,10 @@ const Watch: FC<WatchProps> = () => {
 
   const handleWide = () => {
     setIsWide(!isWide);
+  };
+
+  const handleServerChange = (val: 'gogocdn' | 'streamsb' | 'vidstreaming') => {
+    setServer(val);
   };
 
   const handleProgress = (e: OnProgressProps) => {
@@ -151,6 +158,7 @@ const Watch: FC<WatchProps> = () => {
               timePlayed={secondPlayed}
               isFullScreen={isFullScreen}
               vidResolution={vidResolution}
+              server={server}
               onClick={handlePlayer}
               resolutionList={streamURL.sources}
               handleFullScreen={toggle}
@@ -160,6 +168,7 @@ const Watch: FC<WatchProps> = () => {
               handleVolumeChange={handleVolumeChange}
               handleResolutionChange={handleResolutionChange}
               handleWideOnClick={handleWide}
+              handleServerChange={handleServerChange}
             />
             <ReactPlayer
               key={`${slug}-${id}`}

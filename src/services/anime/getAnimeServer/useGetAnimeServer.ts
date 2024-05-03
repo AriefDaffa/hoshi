@@ -1,32 +1,22 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { getAnimeStreamURL } from '.';
-import type { AnimeStreamResponse } from './types';
+import type { AnimeServerResponse } from './types';
 
-interface UseGetAnimeStreamURLProps {
+interface UseGetAnimeServerProps {
   id: string;
-  server: string;
 }
 
-const defaultVal = {
-  headers: {
-    Referer: '',
-    watchsb: '', // or null, since only provided with server being equal to "streamsb".
-    'User-Agent': '', // or null
+const defaultVal = [
+  {
+    name: '',
+    url: '',
   },
-  sources: [
-    {
-      url: '',
-      quality: '',
-      isM3U8: true,
-    },
-  ],
-};
+];
 
-const useGetAnimeStreamURL = ({
+const UseGetAnimeServer = ({
   id,
-  server,
-}: UseGetAnimeStreamURLProps): AnimeStreamResponse => {
+}: UseGetAnimeServerProps): AnimeServerResponse => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [data, setData] = useState(defaultVal);
@@ -36,7 +26,7 @@ const useGetAnimeStreamURL = ({
     setIsError(false);
 
     try {
-      const req = await getAnimeStreamURL({ episodeID: id, server });
+      const req = await getAnimeStreamURL({ episodeID: id });
 
       const response = await req.json();
 
@@ -53,7 +43,7 @@ const useGetAnimeStreamURL = ({
       setIsLoading(false);
       setIsError(true);
     }
-  }, [id, server]);
+  }, [id]);
 
   useEffect(() => {
     if (typeof id === 'string') {
@@ -66,4 +56,4 @@ const useGetAnimeStreamURL = ({
   }, [data, isLoading, isError]);
 };
 
-export default useGetAnimeStreamURL;
+export default UseGetAnimeServer;
