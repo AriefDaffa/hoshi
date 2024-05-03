@@ -123,7 +123,7 @@ const Watch: FC<WatchProps> = () => {
             className={`relative  ${
               isFullScreen
                 ? 'w-screen h-screen'
-                : 'w-full h-full min-h-[30vh] lg:h-[70vh]'
+                : 'w-full h-full min-h-[30vh] lg:h-[70vh] lg:max-h-[500px]'
             }`}
           >
             {isBuffer && <BufferLoader />}

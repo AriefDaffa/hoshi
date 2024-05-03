@@ -20,7 +20,7 @@ const AnimeDesc: FC<AnimeDescProps> = ({
         <img
           src={image}
           alt=""
-          className="h-[80vh] w-full object-cover rounded-md"
+          className="h-[80vh] max-h-[700px] w-full object-cover rounded-md"
         />
       </div>
       <div className="h-full w-full text-left">
