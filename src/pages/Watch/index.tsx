@@ -26,7 +26,6 @@ const Watch: FC<WatchProps> = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isBuffer, setIsBuffer] = useState(false);
   const [isSeeking, setIsSeeking] = useState(false);
-  const [isWide, setIsWide] = useState(false);
   const [played, setPlayed] = useState(0);
   const [secondPlayed, setSecondPlayed] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -38,6 +37,10 @@ const Watch: FC<WatchProps> = () => {
   const [volume, setVolume] = useLocalStorage({
     key: 'hoshi-vid-vol',
     defaultValue: 0.6,
+  });
+  const [isWide, setIsWide] = useLocalStorage({
+    key: 'hoshi-vid-wide',
+    defaultValue: false,
   });
 
   const checkSlug = typeof slug === 'string' ? slug : '';
