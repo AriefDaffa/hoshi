@@ -1,9 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-import { FaSearch } from 'react-icons/fa';
 import { IoIosClose } from 'react-icons/io';
 import { useClickOutside, useDebouncedState } from '@mantine/hooks';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { ChangeEvent, FC } from 'react';
 
 import { Input } from './ui/input';
@@ -16,6 +15,7 @@ interface NavbarProps {}
 const Navbar: FC<NavbarProps> = () => {
   const [openModal, setOpenModal] = useState(false);
   const [dirtyKeyword, setDirtyKeyword] = useState('');
+  const [open, setOpen] = useState(false);
 
   const [keyword, setKeyword] = useDebouncedState('', 500);
   const ref = useClickOutside(() => setOpenModal(false));
@@ -40,6 +40,17 @@ const Navbar: FC<NavbarProps> = () => {
     setDirtyKeyword(e.target.value);
   };
 
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen((open) => !open);
+      }
+    };
+    document.addEventListener('keydown', down);
+    return () => document.removeEventListener('keydown', down);
+  }, []);
+
   return (
     <div className="sticky top-0 w-full bg-[#09090B] z-50">
       <div className="h-14 border-b-[1px] flex justify-center w-full ">
@@ -61,7 +72,9 @@ const Navbar: FC<NavbarProps> = () => {
                 value={dirtyKeyword}
                 onChange={handleInputChange}
               />
-              <FaSearch />
+              <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+                <span className="text-xs">⌘</span>K
+              </kbd>
             </div>
           </div>
           <AnimatePresence>

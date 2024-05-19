@@ -1,8 +1,16 @@
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { IoIosArrowForward, IoIosArrowBack } from 'react-icons/io';
 import type { FC } from 'react';
 
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from '@/components/ui/carousel';
+import { Button } from '@/components/ui/button';
 import type { AnimeTopData } from '@/services/anime/getTopAnime/types';
-import { Badge } from '@/components/ui/badge';
+import type { CarouselApi } from '@/components/ui/carousel';
 
 interface TrendingSectionProps {
   isLoading: boolean;
@@ -11,12 +19,53 @@ interface TrendingSectionProps {
 
 const TrendingSection: FC<TrendingSectionProps> = ({ data, isLoading }) => {
   const navigate = useNavigate();
+  const [api, setApi] = useState<CarouselApi>();
+
   return (
-    <div className="px-2">
-      <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight mb-2">
+    <div className="size-full px-2">
+      <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight mt-2">
         Trending Anime
       </h3>
-      <div className="w-full h-full min-h-[75vh] flex gap-2">
+      <Carousel setApi={setApi} className="py-2">
+        <CarouselContent>
+          {data.results.map((item, idx) => (
+            <CarouselItem key={idx} className="basis-1/5">
+              <div className=" h-96 rounded-md relative flex items-end border">
+                <img
+                  src={item.image}
+                  alt=""
+                  className="object-cover h-96 rounded-md absolute left -z-10"
+                />
+                {/* <div className="w-full h-24 flex flex-col justify-between p-2">
+                  <div className="text-center text-sm line-clamp-2">
+                    {item.title}
+                  </div>
+                  <Button variant="outline" className="bg-secondary">
+                    Watch
+                  </Button>
+                </div> */}
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <div className="w-full flex justify-end mt-2 gap-2">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => api?.scrollPrev()}
+          >
+            <IoIosArrowBack />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => api?.scrollNext()}
+          >
+            <IoIosArrowForward />
+          </Button>
+        </div>
+      </Carousel>
+      {/* <div className="w-full h-full min-h-[75vh] flex gap-2">
         <div className="w-full grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-2">
           {isLoading
             ? Array.from(Array(10), (_, i) => (
@@ -63,7 +112,7 @@ const TrendingSection: FC<TrendingSectionProps> = ({ data, isLoading }) => {
                 </div>
               ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

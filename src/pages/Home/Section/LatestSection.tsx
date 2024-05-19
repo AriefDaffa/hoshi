@@ -1,6 +1,15 @@
+import { useState } from 'react';
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import type { FC } from 'react';
 
 import { AnimeRecentData } from '@/services/anime/getRecentAnime/types';
+import {
+  Carousel,
+  CarouselApi,
+  CarouselContent,
+  CarouselItem,
+} from '@/components/ui/carousel';
+import { Button } from '@/components/ui/button';
 
 interface LatestSectionProps {
   data: AnimeRecentData;
@@ -8,12 +17,51 @@ interface LatestSectionProps {
 }
 
 const LatestSection: FC<LatestSectionProps> = ({ data, isLoading }) => {
+  const [api, setApi] = useState<CarouselApi>();
+
   return (
     <div className="px-2 mb-4 mt-5">
       <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
         Latest Updated
       </h3>
-      <div className="grid grid-cols-2 gap-2 mt-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+      <Carousel setApi={setApi} className="py-2">
+        <CarouselContent>
+          {data.results.map((item, idx) => (
+            <CarouselItem key={idx} className="basis-1/4">
+              <div className=" h-44 rounded-md relative flex items-end border">
+                <img
+                  src={item.image}
+                  alt=""
+                  className="object-cover h-44 w-full rounded-md "
+                />
+              </div>
+              <div className="mt-2">
+                <div className="text-sm">{item.title}</div>
+                <div className="text-sm text-muted-foreground">
+                  Episode {item.episodeNumber}
+                </div>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <div className="w-full flex justify-end mt-2 gap-2">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => api?.scrollPrev()}
+          >
+            <IoIosArrowBack />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => api?.scrollNext()}
+          >
+            <IoIosArrowForward />
+          </Button>
+        </div>
+      </Carousel>
+      {/* <div className="grid grid-cols-2 gap-2 mt-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {isLoading
           ? Array.from(Array(10), (_, i) => (
               <div key={i} className="h-[482px] border rounded-lg">
@@ -44,7 +92,7 @@ const LatestSection: FC<LatestSectionProps> = ({ data, isLoading }) => {
                 </div>
               </div>
             ))}
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -21,7 +21,7 @@ const Home: FC<HomeProps> = () => {
 
   return (
     <Layout>
-      <HeroSection />
+      {/* <HeroSection /> */}
       <TrendingSection data={trendingAnime} isLoading={isTrendingLoading} />
       <LatestSection data={latestAnime} isLoading={isLatestLoading} />
     </Layout>
