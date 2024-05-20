@@ -14,7 +14,7 @@ const App = () => {
       element: <Home />,
     },
     {
-      path: '/watch/:slug/:id',
+      path: '/:slug/:id',
       element: <Watch />,
     },
     {
