@@ -1,8 +1,17 @@
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { IoIosArrowForward, IoIosArrowBack } from 'react-icons/io';
 import type { FC } from 'react';
 
-import type { AnimeTopData } from '@/services/anime/getTopAnime/types';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from '@/components/ui/carousel';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import type { AnimeTopData } from '@/services/anime/getTopAnime/types';
+import type { CarouselApi } from '@/components/ui/carousel';
 
 interface TrendingSectionProps {
   isLoading: boolean;
@@ -11,59 +20,65 @@ interface TrendingSectionProps {
 
 const TrendingSection: FC<TrendingSectionProps> = ({ data, isLoading }) => {
   const navigate = useNavigate();
+  const [api, setApi] = useState<CarouselApi>();
+
   return (
-    <div className="px-2">
-      <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight mb-2">
+    <div className="size-full px-2">
+      <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight mt-4">
         Trending Anime
       </h3>
-      <div className="w-full h-full min-h-[75vh] flex gap-2">
-        <div className="w-full grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-2">
-          {isLoading
-            ? Array.from(Array(10), (_, i) => (
+      {isLoading || data.results.length === 0 ? (
+        <div className="w-full border rounded-md h-96 mt-2 animate-pulse bg-primary"></div>
+      ) : (
+        <Carousel setApi={setApi} className="py-2">
+          <CarouselContent>
+            {data.results.map((item, idx) => (
+              <CarouselItem key={idx} className="">
                 <div
-                  key={i}
-                  className="flex gap-2 items-end p-2 border rounded-lg"
+                  className="h-96 rounded-md relative flex flex-col-reverse border card-home cursor-pointer md:flex-row "
+                  onClick={() => navigate(`/${item.id}`)}
                 >
-                  <div className="w-36 h-40 border bg-slate-800 animate-pulse rounded-lg"></div>
-                  <div className="w-full flex flex-col gap-2">
-                    <div className="h-[28px] w-full bg-slate-800 rounded-lg animate-pulse"></div>
-                    <div className="h-[20px] w-full bg-slate-800 rounded-lg animate-pulse"></div>
+                  <div className="p-2 flex flex-col justify-end md:w-1/2 md:px-4 md:py-8">
+                    <div className="flex gap-2">
+                      <Badge variant="destructive">Trending #{idx + 1}</Badge>
+                      <Badge>Current Episode: {item.episodeNumber}</Badge>
+                    </div>
+                    <div className="font-semibold text-lg my-1 line-clamp-2 md:text-2xl lg:text-5xl">
+                      {item.title}
+                    </div>
+                    <div className="text-muted-foreground text-sm">
+                      {item.genres.join(', ')}
+                    </div>
                   </div>
-                </div>
-              ))
-            : data.results.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="flex gap-2 items-end p-2 border rounded-lg cursor-pointer relative hover:bg-black"
-                  onClick={() => navigate(`/search/${item.id}`)}
-                >
-                  <div className="absolute top-2 right-2 bg-red-600 rounded-lg w-10 h-10 flex items-center justify-center font-bold">
-                    #{idx + 1}
-                  </div>
-                  <div className="w-36 h-full">
+                  <div className="rounded-md overflow-hidden -z-10 md:w-1/2">
                     <img
                       src={item.image}
                       alt=""
-                      className="w-full h-full object-cover rounded-md"
+                      className="object-cover w-full rounded-md"
                     />
                   </div>
-                  <div className="w-full">
-                    <div className="flex gap-2">
-                      <Badge className="bg-primary-blue text-black font-semibold">
-                        Current Episode: {item.episodeNumber}
-                      </Badge>
-                    </div>
-                    <h4 className="scroll-m-20 text-xl font-semibold tracking-tight line-clamp-2">
-                      {item.title}
-                    </h4>
-                    <p className="text-sm text-muted-foreground">
-                      Genres: {item.genres.join(', ')}
-                    </p>
-                  </div>
                 </div>
-              ))}
-        </div>
-      </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <div className="w-full flex justify-end mt-2 gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => api?.scrollPrev()}
+            >
+              <IoIosArrowBack />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => api?.scrollNext()}
+            >
+              <IoIosArrowForward />
+            </Button>
+          </div>
+        </Carousel>
+      )}
     </div>
   );
 };

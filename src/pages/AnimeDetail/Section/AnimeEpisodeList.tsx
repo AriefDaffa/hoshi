@@ -22,7 +22,7 @@ const AnimeEpisodeList: FC<AnimeEpisodeListProps> = ({
 }) => {
   const handleNavigate = (movieID: string) => {
     // use window location to navigate to force render player component
-    window.location.href = `/watch/${id}/${movieID}`;
+    window.location.href = `/${id}/${movieID}`;
   };
 
   return (

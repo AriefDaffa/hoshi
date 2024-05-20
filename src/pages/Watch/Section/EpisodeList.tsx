@@ -24,7 +24,7 @@ const EpisodeList: FC<EpisodeListProps> = ({
   const { fullscreen: isFullScreen } = useFullscreen();
 
   const handleOnEpsClick = (id: string) => {
-    window.location.href = `/watch/${slug}/${id}`;
+    window.location.href = `/${slug}/${id}`;
   };
 
   return (

@@ -4,7 +4,6 @@ import { ThemeProvider } from '@/components/theme-provider';
 
 import Home from './pages/Home';
 import Watch from './pages/Watch';
-// import Search from './pages/Search';
 import Trending from './pages/Trending';
 import AnimeDetail from './pages/AnimeDetail';
 
@@ -15,7 +14,7 @@ const App = () => {
       element: <Home />,
     },
     {
-      path: '/watch/:slug/:id',
+      path: '/:slug/:id',
       element: <Watch />,
     },
     {
@@ -23,7 +22,7 @@ const App = () => {
       element: <Trending />,
     },
     {
-      path: '/search/:id',
+      path: '/:id',
       element: <AnimeDetail />,
     },
   ]);
