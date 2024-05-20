@@ -21,10 +21,10 @@ const Navbar: FC<NavbarProps> = () => {
   const [open, setOpen] = useState(false);
   const [keyword, setKeyword] = useDebouncedState('', 500);
 
+  const { data, isLoading } = useGetSearchAnime({ keyword });
+
   const navigate = useNavigate();
   const dialogref = useRef<HTMLDivElement>();
-
-  const { data, isLoading } = useGetSearchAnime({ keyword });
 
   const handleOpenModal = () => {
     setOpen(true);

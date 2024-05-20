@@ -202,11 +202,16 @@ const PlayerOverlay: FC<PlayerOverlayProps> = ({
                   </Select>
                 </DialogContent>
               </Dialog>
-              <TooltipHover tooltipContent={'Wide View'}>
-                <IconButton onClick={handleWideOnClick}>
-                  <TbSquareRounded size={22} />
-                </IconButton>
-              </TooltipHover>
+              {!isFullScreen && (
+                <TooltipHover tooltipContent={'Wide View'}>
+                  <IconButton
+                    onClick={handleWideOnClick}
+                    className="hidden lg:block"
+                  >
+                    <TbSquareRounded size={22} />
+                  </IconButton>
+                </TooltipHover>
+              )}
               <TooltipHover tooltipContent={'Fullscreen'}>
                 <IconButton>
                   {isFullScreen ? (

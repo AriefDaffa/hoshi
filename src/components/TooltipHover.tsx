@@ -10,6 +10,7 @@ import {
 interface TooltipHoverProps {
   children: ReactNode;
   tooltipContent: ReactNode;
+  className?: string;
 }
 
 const TooltipHover: FC<TooltipHoverProps> = ({ children, tooltipContent }) => {

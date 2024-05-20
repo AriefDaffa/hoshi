@@ -141,13 +141,13 @@ const Watch: FC<WatchProps> = () => {
           } `}
         >
           <div
-            className={`relative  ${
+            className={`relative  overflow-hidden ${
               isFullScreen
                 ? 'w-screen h-screen'
-                : `w-full h-full lg:min-h-[30vh] lg:h-[70vh] ${
-                    isWide ? 'lg:max-h-[760px]' : 'lg:max-h-[500px]'
+                : `w-full h-full min-h-[30vh] lg:h-[70vh] ${
+                    isWide ? 'lg:max-h-[760px]' : 'lg:max-h-[474.5px]'
                   } `
-            }`}
+            } lg:rounded-xl lg:border`}
           >
             {isBuffer && <BufferLoader />}
             <PlayerOverlay
