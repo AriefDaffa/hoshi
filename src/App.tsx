@@ -22,10 +22,6 @@ const App = () => {
       element: <Trending />,
     },
     {
-      path: '/search/:id',
-      element: <AnimeDetail />,
-    },
-    {
       path: '/:id',
       element: <AnimeDetail />,
     },
