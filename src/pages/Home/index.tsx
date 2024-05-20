@@ -7,7 +7,6 @@ import useGetRecentAnime from '@/services/anime/getRecentAnime/useGetRecentAnime
 
 import TrendingSection from './Section/TrendingSection';
 import LatestSection from './Section/LatestSection';
-import HeroSection from './Section/HeroSection';
 
 interface HomeProps {}
 
@@ -18,7 +17,6 @@ const Home: FC<HomeProps> = () => {
 
   return (
     <Layout>
-      {/* <HeroSection /> */}
       <TrendingSection data={trendingAnime} isLoading={isTrendingLoading} />
       <LatestSection data={latestAnime} isLoading={isLatestLoading} />
     </Layout>
