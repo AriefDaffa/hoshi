@@ -27,7 +27,10 @@ const LatestSection: FC<LatestSectionProps> = ({ data, isLoading }) => {
       <Carousel setApi={setApi} className="py-2">
         <CarouselContent>
           {data.results.map((item, idx) => (
-            <CarouselItem key={idx} className="basis-1/4">
+            <CarouselItem
+              key={idx}
+              className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+            >
               <div className=" h-44 rounded-md relative flex items-end border">
                 <img
                   src={item.image}

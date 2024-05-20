@@ -37,7 +37,7 @@ const AnimeDetail: FC<AnimeDetailProps> = () => {
 
   useEffect(() => {
     if (!isLoading && data.id === '') {
-      navigate('/search');
+      navigate('/');
     }
   }, [data, isLoading, navigate]);
 
@@ -45,7 +45,7 @@ const AnimeDetail: FC<AnimeDetailProps> = () => {
     <Layout>
       {!isLoading ? (
         <div className="w-full h-full mb-4 text-center px-2">
-          <AnimeDetailBreadcrumb id={checkID} />
+          {/* <AnimeDetailBreadcrumb id={checkID} /> */}
           {/* <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight my-2 lg:text-5xl px-2 text-left">
             Anime Details
           </h1> */}

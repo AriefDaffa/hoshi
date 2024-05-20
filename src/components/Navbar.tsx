@@ -1,30 +1,33 @@
 import { useNavigate } from 'react-router-dom';
-import { IoIosClose } from 'react-icons/io';
-import { useClickOutside, useDebouncedState } from '@mantine/hooks';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useDebouncedState } from '@mantine/hooks';
+import { useState, useEffect, useRef } from 'react';
 import type { ChangeEvent, FC } from 'react';
 
-import { Input } from './ui/input';
 import useGetSearchAnime from '@/services/anime/getSearchAnime/useGetSearchAnime';
+import { Input } from './ui/input';
 import { Badge } from './ui/badge';
 import { ScrollArea } from './ui/scroll-area';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from './ui/dialog';
 
 interface NavbarProps {}
 
 const Navbar: FC<NavbarProps> = () => {
-  const [openModal, setOpenModal] = useState(false);
-  const [dirtyKeyword, setDirtyKeyword] = useState('');
   const [open, setOpen] = useState(false);
-
   const [keyword, setKeyword] = useDebouncedState('', 500);
-  const ref = useClickOutside(() => setOpenModal(false));
+
   const navigate = useNavigate();
+  const dialogref = useRef<HTMLDivElement>();
 
   const { data, isLoading } = useGetSearchAnime({ keyword });
 
   const handleOpenModal = () => {
-    setOpenModal(!openModal);
+    setOpen(true);
   };
 
   const navigateHome = () => {
@@ -32,18 +35,21 @@ const Navbar: FC<NavbarProps> = () => {
   };
 
   const navigateSearch = (id: string) => {
-    navigate(`/search/${id}`);
+    setOpen(false);
+    navigate(`/${id}`);
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
-    setDirtyKeyword(e.target.value);
   };
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
+        if (dialogref.current != null) {
+          dialogref.current?.click();
+        }
         setOpen((open) => !open);
       }
     };
@@ -63,80 +69,68 @@ const Navbar: FC<NavbarProps> = () => {
           </div>
           <div>
             <div
-              className="flex items-center md:border rounded-md pr-2"
+              className="flex items-center md:border rounded-md py-2 px-2 cursor-pointer"
               onClick={handleOpenModal}
             >
-              <Input
-                placeholder="Click here to search"
-                className="border-0 focus-visible:ring-0 hidden md:block"
-                value={dirtyKeyword}
-                onChange={handleInputChange}
-              />
+              <div className="mr-4 text-sm text-muted-foreground hidden md:block">
+                Click here to search
+              </div>
               <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
                 <span className="text-xs">⌘</span>K
               </kbd>
             </div>
           </div>
-          <AnimatePresence>
-            {openModal && dirtyKeyword && (
-              <motion.div
-                ref={ref}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="absolute top-full right-0 h-screen w-full bg-[#09090B] border p-2 rounded-md md:top-[120%] md:h-[350px] md:max-w-[400px]"
-              >
-                <div className="w-full flex justify-end items-center md:hidden">
-                  <IoIosClose size={24} onClick={handleOpenModal} />
-                </div>
-                <label className="md:hidden">Search Anime</label>
-                <div className="flex items-center rounded-md pr-2 border mt-1 md:border-none">
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Search Anime</DialogTitle>
+                <DialogDescription>
                   <Input
-                    placeholder="Type here to search"
-                    className="border-0 focus-visible:ring-0 block md:hidden"
-                    value={dirtyKeyword}
+                    placeholder="Search anime..."
+                    className="my-2"
                     onChange={handleInputChange}
                   />
-                </div>
-                <div className="pt-2 h-full md:pt-0">
-                  {!isLoading && (
-                    <ScrollArea className="h-[70vh] md:h-[320px]">
+                  {keyword === '' ? (
+                    <div className="h-[250px] flex items-center justify-center">
+                      <div className="flex flex-col items-center w-full justify-center">
+                        <div>Start typing to search</div>
+                      </div>
+                    </div>
+                  ) : isLoading ? (
+                    <div className="h-[250px] flex gap-2 flex-col justify-center">
+                      <div className="bg-primary animate-pulse h-[112px]" />
+                      <div className="bg-primary animate-pulse h-[112px]" />
+                      <div className="bg-primary animate-pulse h-[112px]" />
+                    </div>
+                  ) : (
+                    <ScrollArea className="h-[250px]">
                       {data.results.map((item, idx) => (
                         <div
                           key={idx}
                           onClick={() => navigateSearch(item.id)}
-                          className="flex gap-2 items-end cursor-pointer p-2 border-md hover:bg-primary"
+                          className="flex gap-2 items-end cursor-pointer p-2 rounded-md hover:bg-primary"
                         >
-                          <img
-                            src={item.image}
-                            alt=""
-                            className="h-28 w-20 rounded-md"
-                          />
-                          <div>
-                            {(item.subOrDub === 'sub' ||
-                              item.subOrDub === 'dub') && (
-                              <Badge
-                                className={`${
-                                  item.subOrDub === 'sub'
-                                    ? 'bg-red-500'
-                                    : 'bg-bluePrimary'
-                                }`}
-                              >
-                                {item.subOrDub === 'sub'
-                                  ? 'Subtitle'
-                                  : 'Dubbing'}
-                              </Badge>
-                            )}
-                            <div>{item.title}</div>
+                          <div className="h-24 w-20  object-cover rounded-md overflow-hidden">
+                            <img
+                              src={item.image}
+                              alt=""
+                              className="size-full"
+                            />
+                          </div>
+                          <div className="w-full h-full">
+                            <Badge>{item.subOrDub}</Badge>
+                            <div className="text-lg text-white line-clamp-1">
+                              {item.title}
+                            </div>
                           </div>
                         </div>
                       ))}
                     </ScrollArea>
                   )}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </div>

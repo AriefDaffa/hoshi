@@ -26,6 +26,10 @@ const App = () => {
       path: '/search/:id',
       element: <AnimeDetail />,
     },
+    {
+      path: '/:id',
+      element: <AnimeDetail />,
+    },
   ]);
 
   return (

@@ -1,4 +1,3 @@
-// import { useNavigate } from 'react-router-dom';
 import type { FC } from 'react';
 
 import Layout from '@/components/Layout';
@@ -13,8 +12,6 @@ import HeroSection from './Section/HeroSection';
 interface HomeProps {}
 
 const Home: FC<HomeProps> = () => {
-  // const navigate = useNavigate();
-
   const { data: trendingAnime, isLoading: isTrendingLoading } =
     useGetTopAnime();
   const { data: latestAnime, isLoading: isLatestLoading } = useGetRecentAnime();

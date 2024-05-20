@@ -26,7 +26,7 @@ const Search: FC<SearchProps> = () => {
   const handleOnClick = (id: string) => {
     setAnimate(true);
     setTimeout(() => {
-      navigate(`/search/${id}`);
+      navigate(`/${id}`);
     }, 100);
   };
 
