@@ -14,6 +14,7 @@ import Layout from '@/components/Layout';
 
 import AnimeDesc from './Section/AnimeDesc';
 import BufferLoader from './Section/BufferLoader';
+import { useNavbarContext } from '@/context/NavbarContext';
 
 interface WatchProps {}
 
@@ -22,6 +23,7 @@ const Watch: FC<WatchProps> = () => {
   const { toggle, fullscreen: isFullScreen } = useFullscreen();
 
   const navigate = useNavigate();
+  const { isDialogOpen } = useNavbarContext();
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [isBuffer, setIsBuffer] = useState(false);
@@ -116,7 +118,7 @@ const Watch: FC<WatchProps> = () => {
       (!isAnimeInfoLoading && animeInfo.episodes.length === 0) ||
       (!isAnimeStreamURLLoading && streamURL.sources.length === 0)
     ) {
-      navigate('/search');
+      navigate('/');
     }
   }, [
     animeInfo,
@@ -128,23 +130,25 @@ const Watch: FC<WatchProps> = () => {
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === ' ') {
+      if (e.key === ' ' && !isDialogOpen) {
         e.preventDefault();
         setIsPlaying(!isPlaying);
       }
     };
     document.addEventListener('keydown', down);
     return () => document.removeEventListener('keydown', down);
-  }, [isPlaying]);
+  }, [isDialogOpen, isPlaying]);
 
   return (
     <Layout>
       <div
-        className={`w-full h-full ${
+        className={`w-full h-full  ${
           isFullScreen
             ? ''
-            : `${isWide ? 'lg:flex-col' : 'lg:flex-row'} lg:flex lg:gap-4`
-        } overflow-x-hidden`}
+            : `${
+                isWide ? 'lg:flex-col' : 'lg:flex-row'
+              } lg:flex lg:gap-4 lg:px-4`
+        } overflow-x-hidden `}
       >
         <div
           className={` ${
@@ -158,7 +162,7 @@ const Watch: FC<WatchProps> = () => {
                 : `w-full h-full min-h-[30vh] lg:h-[70vh] ${
                     isWide ? 'lg:max-h-[760px]' : 'lg:max-h-[474.5px]'
                   } `
-            } lg:rounded-xl lg:border`}
+            } lg:rounded-xl `}
           >
             {isBuffer && <BufferLoader />}
             <PlayerOverlay

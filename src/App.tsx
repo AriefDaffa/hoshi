@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Watch from './pages/Watch';
 import Trending from './pages/Trending';
 import AnimeDetail from './pages/AnimeDetail';
+import { NavbarContextProvider } from './context/NavbarContext';
 
 const App = () => {
   const router = createBrowserRouter([
@@ -29,7 +30,9 @@ const App = () => {
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <RouterProvider router={router} />
+      <NavbarContextProvider>
+        <RouterProvider router={router} />
+      </NavbarContextProvider>
     </ThemeProvider>
   );
 };
