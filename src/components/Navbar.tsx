@@ -1,9 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { useDebouncedState } from '@mantine/hooks';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import type { ChangeEvent, FC } from 'react';
 
 import useGetSearchAnime from '@/services/anime/getSearchAnime/useGetSearchAnime';
+import { useNavbarContext } from '@/context/NavbarContext';
 import { Input } from './ui/input';
 import { Badge } from './ui/badge';
 import { ScrollArea } from './ui/scroll-area';
@@ -18,16 +19,16 @@ import {
 interface NavbarProps {}
 
 const Navbar: FC<NavbarProps> = () => {
-  const [open, setOpen] = useState(false);
   const [keyword, setKeyword] = useDebouncedState('', 500);
-
-  const navigate = useNavigate();
-  const dialogref = useRef<HTMLDivElement>();
 
   const { data, isLoading } = useGetSearchAnime({ keyword });
 
+  const { isDialogOpen, setIsDialogOpen } = useNavbarContext();
+
+  const navigate = useNavigate();
+
   const handleOpenModal = () => {
-    setOpen(true);
+    setIsDialogOpen(true);
   };
 
   const navigateHome = () => {
@@ -35,7 +36,7 @@ const Navbar: FC<NavbarProps> = () => {
   };
 
   const navigateSearch = (id: string) => {
-    setOpen(false);
+    setIsDialogOpen(false);
     navigate(`/${id}`);
   };
 
@@ -47,19 +48,16 @@ const Navbar: FC<NavbarProps> = () => {
     const down = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        if (dialogref.current != null) {
-          dialogref.current?.click();
-        }
-        setOpen((open) => !open);
+        setIsDialogOpen((isDialogOpen) => !isDialogOpen);
       }
     };
     document.addEventListener('keydown', down);
     return () => document.removeEventListener('keydown', down);
-  }, []);
+  }, [setIsDialogOpen]);
 
   return (
     <div className="sticky top-0 w-full bg-[#09090B] z-50">
-      <div className="h-14 border-b-[1px] flex justify-center w-full ">
+      <div className="h-14 flex justify-center w-full ">
         <div className="flex justify-between items-center h-full px-4 w-full max-w-screen-xl relative">
           <div
             className="flex items-center gap-2 cursor-pointer"
@@ -80,7 +78,7 @@ const Navbar: FC<NavbarProps> = () => {
               </kbd>
             </div>
           </div>
-          <Dialog open={open} onOpenChange={setOpen}>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Search Anime</DialogTitle>

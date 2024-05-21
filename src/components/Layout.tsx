@@ -12,7 +12,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   const { fullscreen: isFullScreen } = useFullscreen();
   const location = useLocation();
 
-  const checkFullScreen = isFullScreen && location.pathname.includes('watch');
+  const checkFullScreen = isFullScreen && location.pathname.includes('episode');
 
   return (
     <div className="w-full h-full flex flex-col items-center relative">
