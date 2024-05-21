@@ -126,6 +126,17 @@ const Watch: FC<WatchProps> = () => {
     streamURL,
   ]);
 
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === ' ') {
+        e.preventDefault();
+        setIsPlaying(!isPlaying);
+      }
+    };
+    document.addEventListener('keydown', down);
+    return () => document.removeEventListener('keydown', down);
+  }, [isPlaying]);
+
   return (
     <Layout>
       <div

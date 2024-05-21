@@ -59,7 +59,7 @@ const Navbar: FC<NavbarProps> = () => {
 
   return (
     <div className="sticky top-0 w-full bg-[#09090B] z-50">
-      <div className="h-14 border-b-[1px] flex justify-center w-full ">
+      <div className="h-14 flex justify-center w-full ">
         <div className="flex justify-between items-center h-full px-4 w-full max-w-screen-xl relative">
           <div
             className="flex items-center gap-2 cursor-pointer"
