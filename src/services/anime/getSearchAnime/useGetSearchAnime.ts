@@ -1,55 +1,31 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
-import { getSearchAnime } from '.';
-import type {
-  UseGetSearchAnimeProps,
-  AnimeSearchResponse,
-  AnimeSearchData,
-} from './types';
+import { useQuery } from '@tanstack/react-query';
 
-const defaultVal = {
-  currentPage: 0,
-  hasNextPage: true,
-  results: [],
-};
+import { defaultVal } from './constant';
+import type { AnimeSearchData } from './types';
 
-const useGetSearchAnime = ({
-  keyword,
-}: UseGetSearchAnimeProps): AnimeSearchResponse => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState<AnimeSearchData>(defaultVal);
+const useGetSearchAnime = ({ keyword }: { keyword: string }) => {
+  const { isPending, data, isSuccess } = useQuery<AnimeSearchData>({
+    queryKey: ['search', keyword],
+    enabled: keyword !== '' && keyword !== undefined,
+    queryFn: () =>
+      fetch(
+        `${import.meta.env.VITE_APP_BASE_API}/anime/gogoanime/${keyword}`
+      ).then((res) => res.json()),
+  });
 
-  const fetchData = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const req = await getSearchAnime({ keyword });
-
-      const response = await req.json();
-
-      setIsLoading(false);
-
-      if (req.status >= 200 && req.status < 300) {
-        setData(response);
-      } else {
-        setData(defaultVal);
-      }
-    } catch (error) {
-      setData(defaultVal);
-      setIsLoading(false);
-    }
-  }, [keyword]);
-
-  useEffect(() => {
-    if (keyword !== '') {
-      fetchData();
+  const normalizer = useMemo(() => {
+    if (!isSuccess) {
+      return defaultVal;
     } else {
-      setData(defaultVal);
+      return data;
     }
-  }, [fetchData, keyword]);
+  }, [data, isSuccess]);
 
   return useMemo(() => {
-    return { data, isLoading };
-  }, [data, isLoading]);
+    return { isLoading: isPending, data: normalizer, isSuccess };
+  }, [isPending, isSuccess, normalizer]);
 };
 
 export default useGetSearchAnime;

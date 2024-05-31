@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useDebouncedState } from '@mantine/hooks';
 import { useEffect } from 'react';
+import { IoIosSearch } from 'react-icons/io';
 import type { ChangeEvent, FC } from 'react';
 
 import useGetSearchAnime from '@/services/anime/getSearchAnime/useGetSearchAnime';
@@ -15,6 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from './ui/dialog';
+import { Button } from './ui/button';
 
 interface NavbarProps {}
 
@@ -37,7 +39,7 @@ const Navbar: FC<NavbarProps> = () => {
 
   const navigateSearch = (id: string) => {
     setIsDialogOpen(false);
-    navigate(`/${id}`);
+    navigate(`/detail/${id}`);
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -67,9 +69,10 @@ const Navbar: FC<NavbarProps> = () => {
           </div>
           <div>
             <div
-              className="flex items-center md:border rounded-md py-2 px-2 cursor-pointer"
+              className="items-center  rounded-md py-2 px-2 cursor-pointer hidden md:flex md:border"
               onClick={handleOpenModal}
             >
+              <IoIosSearch className="mr-2" />
               <div className="mr-4 text-sm text-muted-foreground hidden md:block">
                 Click here to search
               </div>
@@ -77,6 +80,14 @@ const Navbar: FC<NavbarProps> = () => {
                 <span className="text-xs">⌘</span>K
               </kbd>
             </div>
+            <Button
+              variant="secondary"
+              size="icon"
+              className="flex justify-center md:hidden"
+              onClick={handleOpenModal}
+            >
+              <IoIosSearch className="" />
+            </Button>
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogContent>

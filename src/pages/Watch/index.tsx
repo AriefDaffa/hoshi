@@ -1,104 +1,53 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ReactPlayer from 'react-player';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useFullscreen, useLocalStorage } from '@mantine/hooks';
-import { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useIdle } from '@mantine/hooks';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import type { ChangeEvent, FC } from 'react';
 import type { OnProgressProps } from 'react-player/base';
 
-import PlayerOverlay from './Section/PlayerOverlay';
-import EpisodeList from './Section/EpisodeList';
 import useGetAnimeInfo from '@/services/anime/getAnimeInfo/useGetAnimeInfo';
 import useGetAnimeStreamURL from '@/services/anime/getAnimeStreamURL/useGetAnimeStreamURL';
-import Layout from '@/components/Layout';
-
-import AnimeDesc from './Section/AnimeDesc';
-import BufferLoader from './Section/BufferLoader';
-import { useNavbarContext } from '@/context/NavbarContext';
+import BottomMenu from './Section/BottomMenu';
+import TopMenu from './Section/TopMenu';
+import SheetEpisode from './Section/SheetEpisode';
+import useVidVolume from './hooks/useVidVolume';
+import useVidResolution from './hooks/useVidResolution';
 
 interface WatchProps {}
 
 const Watch: FC<WatchProps> = () => {
   const { slug, id } = useParams();
-  const { toggle, fullscreen: isFullScreen } = useFullscreen();
-
-  const navigate = useNavigate();
-  const { isDialogOpen } = useNavbarContext();
-
+  const [isSeeking, setIsSeeking] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isBuffer, setIsBuffer] = useState(false);
-  const [isSeeking, setIsSeeking] = useState(false);
-  const [played, setPlayed] = useState(0);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [timeRunning, setTimeRunning] = useState(0);
   const [secondPlayed, setSecondPlayed] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [server, setServer] = useState<'gogocdn' | 'streamsb' | 'vidstreaming'>(
-    'gogocdn'
-  );
 
-  const [vidResolution, setVidResolution] = useLocalStorage({
-    key: 'hoshi-vid-res',
-    defaultValue: '0',
-  });
-  const [volume, setVolume] = useLocalStorage({
-    key: 'hoshi-vid-vol',
-    defaultValue: 0.6,
-  });
-  const [isWide, setIsWide] = useLocalStorage({
-    key: 'hoshi-vid-wide',
-    defaultValue: false,
-  });
+  const isIdle = useIdle(1000);
 
   const checkSlug = typeof slug === 'string' ? slug : '';
   const checkID = typeof id === 'string' ? id : '';
 
-  const idSplit = checkID.split('-');
+  const { data: animeStream, isLoading: isAnimeStreamLoading } =
+    useGetAnimeStreamURL({ id: checkID, server: 'gogocdn' });
+  const { data: animeDetails, isLoading: isAnimeInfoLoading } = useGetAnimeInfo(
+    { id: checkSlug }
+  );
 
-  const {
-    data: animeInfo,
-    isLoading: isAnimeInfoLoading,
-    isError: isAnimeInfoError,
-  } = useGetAnimeInfo({
-    id: checkSlug,
-  });
-  const {
-    data: streamURL,
-    isLoading: isAnimeStreamURLLoading,
-    isError: isAnimeStreamURLError,
-  } = useGetAnimeStreamURL({ id: checkID, server });
-
-  const currentEps = idSplit[idSplit.length - 1] || '';
+  // custom hooks
+  const { vidResolution } = useVidResolution();
+  const { volume } = useVidVolume();
 
   const player = useRef<ReactPlayer>(null);
 
-  const handleVolumeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setVolume(parseFloat(e.target.value));
-  };
-
-  const handlePlayer = () => {
-    setIsPlaying(!isPlaying);
-  };
-
-  const handleWide = () => {
-    setIsWide(!isWide);
-  };
-
-  const handleServerChange = (val: 'gogocdn' | 'streamsb' | 'vidstreaming') => {
-    setServer(val);
-  };
-
-  const handleProgress = (e: OnProgressProps) => {
-    if (!isSeeking) {
-      setPlayed(e.played);
-    }
-    setSecondPlayed(e.playedSeconds);
-  };
-
   const handleSeekChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPlayed(parseFloat(e.target.value));
-  };
-
-  const handleSeekMouseDown = () => {
-    setIsSeeking(true);
+    setTimeRunning(parseFloat(e.target.value));
   };
 
   const handleSeekMouseUp = (e: any) => {
@@ -109,24 +58,62 @@ const Watch: FC<WatchProps> = () => {
     }
   };
 
-  const handleResolutionChange = (e: string) => {
-    setVidResolution(e);
+  const handleSeekMouseDown = () => {
+    setIsSeeking(true);
   };
 
-  useEffect(() => {
-    if (
-      (!isAnimeInfoLoading && animeInfo.episodes.length === 0) ||
-      (!isAnimeStreamURLLoading && streamURL.sources.length === 0)
-    ) {
-      navigate('/');
+  const handleProgress = (e: OnProgressProps) => {
+    if (!isSeeking) {
+      setTimeRunning(e.played);
     }
-  }, [
-    animeInfo,
-    isAnimeInfoLoading,
-    isAnimeStreamURLLoading,
-    navigate,
-    streamURL,
-  ]);
+    setSecondPlayed(e.playedSeconds);
+  };
+
+  const handlePlayer = () => {
+    setIsPlaying(!isPlaying);
+  };
+
+  const handleSheetClose = useCallback(() => {
+    setIsSheetOpen(false);
+  }, []);
+
+  const handleSheetOpen = useCallback(() => {
+    setIsSheetOpen(true);
+  }, []);
+
+  const currentEps = useMemo(() => {
+    const splittedArr = checkID.split('-');
+
+    return splittedArr[splittedArr.length - 1] || '';
+  }, [checkID]);
+
+  const parentLoading = useMemo(() => {
+    return isAnimeStreamLoading || isAnimeInfoLoading || isBuffer;
+  }, [isAnimeInfoLoading, isAnimeStreamLoading, isBuffer]);
+
+  const checkIsPlaying = useMemo(() => {
+    if (isPlaying) {
+      if (isSheetOpen) {
+        return false;
+      } else {
+        return isIdle;
+      }
+    } else {
+      return isPlaying;
+    }
+  }, [isIdle, isPlaying, isSheetOpen]);
+
+  const videoURL = useMemo(() => {
+    const filterURL = animeStream.sources.find(
+      (x) => x.quality === vidResolution
+    );
+
+    if (filterURL === undefined) {
+      return animeStream.sources[0].url;
+    } else {
+      return filterURL.url;
+    }
+  }, [animeStream.sources, vidResolution]);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -135,89 +122,101 @@ const Watch: FC<WatchProps> = () => {
         setIsPlaying(!isPlaying);
       }
     };
+
+    const right = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight' && !isDialogOpen) {
+        e.preventDefault();
+        if (player.current !== null) {
+          player.current.seekTo(timeRunning + 0.005);
+        }
+      }
+    };
+
+    const left = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft' && !isDialogOpen) {
+        e.preventDefault();
+        if (player.current !== null) {
+          player.current.seekTo(timeRunning - 0.005);
+        }
+      }
+    };
+
     document.addEventListener('keydown', down);
-    return () => document.removeEventListener('keydown', down);
-  }, [isDialogOpen, isPlaying]);
+    document.addEventListener('keydown', right);
+    document.addEventListener('keydown', left);
+    return () => {
+      document.removeEventListener('keydown', down);
+      document.removeEventListener('keydown', right);
+      document.removeEventListener('keydown', left);
+    };
+  }, [isDialogOpen, isPlaying, timeRunning]);
 
   return (
-    <Layout>
-      <div
-        className={`w-full h-full  ${
-          isFullScreen
-            ? ''
-            : `${
-                isWide ? 'lg:flex-col' : 'lg:flex-row'
-              } lg:flex lg:gap-4 lg:px-4`
-        } overflow-x-hidden `}
-      >
-        <div
-          className={` ${
-            isFullScreen ? '' : `${isWide ? 'lg:w-full' : 'lg:w-2/3'} pt-2`
-          } `}
-        >
-          <div
-            className={`relative  overflow-hidden ${
-              isFullScreen
-                ? 'w-screen h-screen'
-                : `w-full h-full min-h-[30vh] lg:h-[70vh] ${
-                    isWide ? 'lg:max-h-[760px]' : 'lg:max-h-[474.5px]'
-                  } `
-            } lg:rounded-xl `}
-          >
-            {isBuffer && <BufferLoader />}
-            <PlayerOverlay
-              duration={duration}
-              isPlaying={isPlaying}
-              played={played}
-              volume={volume}
-              timePlayed={secondPlayed}
-              isFullScreen={isFullScreen}
-              vidResolution={vidResolution}
-              server={server}
-              onClick={handlePlayer}
-              resolutionList={streamURL.sources}
-              handleFullScreen={toggle}
-              handleSeekMouseDown={handleSeekMouseDown}
-              handleSeekMouseUp={handleSeekMouseUp}
-              handleSeekChange={handleSeekChange}
-              handleVolumeChange={handleVolumeChange}
-              handleResolutionChange={handleResolutionChange}
-              handleWideOnClick={handleWide}
-              handleServerChange={handleServerChange}
-            />
-            <ReactPlayer
-              key={`${slug}-${id}`}
-              ref={player}
-              url={streamURL.sources[Number(vidResolution || 0)]?.url}
-              width={'100%'}
-              height={'100%'}
-              volume={volume}
-              playing={isPlaying}
-              onProgress={handleProgress}
-              onBuffer={() => setIsBuffer(true)}
-              onBufferEnd={() => {
-                setIsBuffer(false);
-                setIsPlaying(true);
-              }}
-              onDuration={(e) => setDuration(e)}
-            />
-          </div>
-          <AnimeDesc
-            {...animeInfo}
-            currentEps={currentEps}
-            isLoading={isAnimeInfoLoading}
-            isError={isAnimeInfoError}
-          />
+    <div className="w-screen h-screen relative">
+      {parentLoading && (
+        <div className="absolute top-0 left-0 right-0 bottom-0 m-auto size-min ">
+          <AiOutlineLoading3Quarters size={50} className="animate-spin" />
         </div>
-        <EpisodeList
+      )}
+      <div className="size-full absolute top-0 z-10">
+        <AnimatePresence>
+          {!checkIsPlaying && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+              className="size-full flex flex-col justify-between relative"
+              onClick={handlePlayer}
+            >
+              <TopMenu
+                animeInfo={animeDetails}
+                currentEps={currentEps}
+                isDialogOpen={isDialogOpen}
+                setIsDialogOpen={setIsDialogOpen}
+                handleSheetOpen={handleSheetOpen}
+              />
+              <BottomMenu
+                duration={duration}
+                timePlayed={secondPlayed}
+                played={timeRunning}
+                volume={volume}
+                isPlaying={isPlaying}
+                resolutionList={animeStream.sources}
+                selectedResolution={vidResolution}
+                handlePlay={handlePlayer}
+                handleSeekChange={handleSeekChange}
+                handleSeekMouseDown={handleSeekMouseDown}
+                handleSeekMouseUp={handleSeekMouseUp}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <SheetEpisode
           currentEps={currentEps}
-          episodes={animeInfo.episodes}
-          isWide={isWide}
-          isLoading={isAnimeStreamURLLoading}
-          isError={isAnimeStreamURLError}
+          animeID={animeDetails.id}
+          episodes={animeDetails.episodes}
+          isOpen={isSheetOpen}
+          onSheetClose={handleSheetClose}
         />
       </div>
-    </Layout>
+      <ReactPlayer
+        key={`${slug}-${id}`}
+        ref={player}
+        url={videoURL}
+        width={'100%'}
+        height={'100%'}
+        volume={volume}
+        playing={isPlaying}
+        onProgress={handleProgress}
+        onBuffer={() => setIsBuffer(true)}
+        onBufferEnd={() => {
+          setIsBuffer(false);
+          setIsPlaying(true);
+        }}
+        onDuration={(e) => setDuration(e)}
+      />
+    </div>
   );
 };
 

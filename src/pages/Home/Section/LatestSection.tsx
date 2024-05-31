@@ -3,7 +3,7 @@ import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import type { FC } from 'react';
 
-import { AnimeRecentData } from '@/services/anime/getRecentAnime/types';
+import { AnimeRecentResults } from '@/services/anime/getRecentAnime/types';
 import {
   Carousel,
   CarouselApi,
@@ -13,8 +13,8 @@ import {
 import { Button } from '@/components/ui/button';
 
 interface LatestSectionProps {
-  data: AnimeRecentData;
   isLoading: boolean;
+  data: AnimeRecentResults[];
 }
 
 const LatestSection: FC<LatestSectionProps> = ({ data, isLoading }) => {
@@ -27,7 +27,7 @@ const LatestSection: FC<LatestSectionProps> = ({ data, isLoading }) => {
       <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
         Latest Updated
       </h3>
-      {isLoading || data.results.length === 0 ? (
+      {isLoading || data.length === 0 ? (
         <div className="grid gap-2  my-2 md:grid-cols-4">
           {Array.from(Array(4), (_, i) => (
             <div className="" key={i}>
@@ -39,13 +39,13 @@ const LatestSection: FC<LatestSectionProps> = ({ data, isLoading }) => {
       ) : (
         <Carousel setApi={setApi} className="py-2">
           <CarouselContent>
-            {data.results.map((item, idx) => (
+            {data.map((item, idx) => (
               <CarouselItem
                 key={idx}
                 className="cursor-pointer sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
-                onClick={() => navigate(`/${item.id}/${item.episodeId}`)}
+                onClick={() => navigate(`/watch/${item.id}/${item.episodeId}`)}
               >
-                <div className=" h-44 rounded-md relative flex items-end border ">
+                <div className="h-44 rounded-md relative flex items-end border ">
                   <img
                     src={item.image}
                     alt=""
@@ -53,7 +53,7 @@ const LatestSection: FC<LatestSectionProps> = ({ data, isLoading }) => {
                   />
                 </div>
                 <div className="mt-2">
-                  <div className="text-sm">{item.title}</div>
+                  <div className="text-sm line-clamp-1">{item.title}</div>
                   <div className="text-sm text-muted-foreground">
                     Episode {item.episodeNumber}
                   </div>
