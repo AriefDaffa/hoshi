@@ -1,44 +1,29 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
-import { getTopAnime } from '.';
-import type { AnimeTopResponse } from './types';
+import { defaultVal } from './constant';
+import type { AnimeTopData } from './types';
 
-const defaultVal = {
-  currentPage: 0,
-  hasNextPage: true,
-  results: [],
-};
+const useGetTopAnime = () => {
+  const { isPending, data, isSuccess } = useQuery<AnimeTopData>({
+    queryKey: ['top'],
+    queryFn: () =>
+      fetch(
+        `${import.meta.env.VITE_APP_BASE_API}/anime/gogoanime/top-airing`
+      ).then((res) => res.json()),
+  });
 
-const useGetTopAnime = (): AnimeTopResponse => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState(defaultVal);
-
-  const fetchData = useCallback(async () => {
-    try {
-      const req = await getTopAnime();
-
-      const response = await req.json();
-
-      setIsLoading(false);
-
-      if (req.status >= 200 && req.status < 300) {
-        setData(response);
-      } else {
-        setData(defaultVal);
-      }
-    } catch (error) {
-      setData(defaultVal);
-      setIsLoading(false);
+  const normalizer = useMemo(() => {
+    if (!isSuccess) {
+      return defaultVal;
+    } else {
+      return data;
     }
-  }, []);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+  }, [data, isSuccess]);
 
   return useMemo(() => {
-    return { data, isLoading };
-  }, [data, isLoading]);
+    return { isLoading: isPending, data: normalizer, isSuccess };
+  }, [isPending, isSuccess, normalizer]);
 };
 
 export default useGetTopAnime;

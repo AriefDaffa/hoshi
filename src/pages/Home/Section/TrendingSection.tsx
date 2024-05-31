@@ -1,5 +1,6 @@
-import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AiOutlinePlayCircle } from 'react-icons/ai';
 import { IoIosArrowForward, IoIosArrowBack } from 'react-icons/io';
 import type { FC } from 'react';
 
@@ -10,68 +11,75 @@ import {
 } from '@/components/ui/carousel';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import type { AnimeTopData } from '@/services/anime/getTopAnime/types';
 import type { CarouselApi } from '@/components/ui/carousel';
+import type { AnimeTopResults } from '@/services/anime/getTopAnime/types';
 
 interface TrendingSectionProps {
   isLoading: boolean;
-  data: AnimeTopData;
+  data: AnimeTopResults[];
 }
 
 const TrendingSection: FC<TrendingSectionProps> = ({ data, isLoading }) => {
   const navigate = useNavigate();
+
   const [api, setApi] = useState<CarouselApi>();
 
   return (
     <div className="size-full px-2">
-      <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight mt-4">
-        Trending Anime
-      </h3>
-      {isLoading || data.results.length === 0 ? (
+      {isLoading || data?.length === 0 ? (
         <div className="w-full border rounded-md h-96 mt-2 animate-pulse bg-primary"></div>
       ) : (
-        <Carousel setApi={setApi} className="py-2">
+        <Carousel setApi={setApi} className="py-2 relative">
           <CarouselContent>
-            {data.results.map((item, idx) => (
+            {data?.map((item, idx) => (
               <CarouselItem key={idx} className="">
-                <div
-                  className="h-96 rounded-md relative flex flex-col-reverse border card-home cursor-pointer md:flex-row "
-                  onClick={() => navigate(`/${item.id}`)}
-                >
-                  <div className="p-2 flex flex-col justify-end md:w-1/2 md:px-4 md:py-8">
-                    <div className="flex gap-2">
-                      <Badge variant="destructive">Trending #{idx + 1}</Badge>
-                      <Badge>Current Episode: {item.episodeNumber}</Badge>
+                <div className="h-[30rem] rounded-md relative flex flex-col-reverse card-home lg:h-[60vh] md:flex-row">
+                  <div className="flex flex-col justify-end md:w-1/2 md:py-8">
+                    <div className="flex gap-2 mt-4">
+                      <Badge variant="destructive">Trending</Badge>
                     </div>
                     <div className="font-semibold text-lg my-1 line-clamp-2 md:text-2xl lg:text-5xl">
                       {item.title}
                     </div>
-                    <div className="text-muted-foreground text-sm">
+                    <div className="text-muted-foreground text-sm mb-2">
                       {item.genres.join(', ')}
+                    </div>
+                    <div className="text-muted-foreground text-sm mb-2">
+                      {item.episodeNumber} Episodes
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="destructive"
+                        className="mt-2 flex gap-1 max-w-[250px] items-center"
+                        onClick={() => navigate(`/detail/${item.id}`)}
+                      >
+                        <AiOutlinePlayCircle size={20} />
+                        Watch Now
+                      </Button>
                     </div>
                   </div>
                   <div className="rounded-md overflow-hidden -z-10 md:w-1/2">
                     <img
                       src={item.image}
                       alt=""
-                      className="object-cover w-full rounded-md"
+                      className="object-cover w-full h-full rounded-md"
                     />
                   </div>
                 </div>
               </CarouselItem>
             ))}
           </CarouselContent>
-          <div className="w-full flex justify-end mt-2 gap-2">
+          <div className=" justify-end mt-2 gap-2 hidden absolute bottom-5 right-5 md:flex">
             <Button
               variant="outline"
-              size="icon"
+              className="rounded-full w-12 h-12"
               onClick={() => api?.scrollPrev()}
             >
               <IoIosArrowBack />
             </Button>
             <Button
               variant="outline"
-              size="icon"
+              className="rounded-full w-12 h-12"
               onClick={() => api?.scrollNext()}
             >
               <IoIosArrowForward />

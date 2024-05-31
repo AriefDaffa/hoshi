@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { ThemeProvider } from '@/components/theme-provider';
 
@@ -9,31 +10,35 @@ import AnimeDetail from './pages/AnimeDetail';
 import { NavbarContextProvider } from './context/NavbarContext';
 
 const App = () => {
+  const queryClient = new QueryClient();
+
   const router = createBrowserRouter([
     {
       path: '/',
       element: <Home />,
     },
     {
-      path: '/:slug/:id',
+      path: '/detail/:id',
+      element: <AnimeDetail />,
+    },
+    {
+      path: '/watch/:slug/:id',
       element: <Watch />,
     },
     {
       path: '/trending',
       element: <Trending />,
     },
-    {
-      path: '/:id',
-      element: <AnimeDetail />,
-    },
   ]);
 
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <NavbarContextProvider>
-        <RouterProvider router={router} />
-      </NavbarContextProvider>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <NavbarContextProvider>
+          <RouterProvider router={router} />
+        </NavbarContextProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 };
 

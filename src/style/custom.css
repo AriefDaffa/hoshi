@@ -1,19 +1,19 @@
 @media (min-width: 768px) {
   .card-home {
-    background: rgb(0, 0, 0);
+    background: rgb(9, 9, 11);
     background: -moz-linear-gradient(
       90deg,
-      rgba(0, 0, 0, 1) 50%,
+      rgba(9, 9, 11, 1) 50%,
       rgba(255, 255, 255, 0) 100%
     );
     background: -webkit-linear-gradient(
       90deg,
-      rgba(0, 0, 0, 1) 50%,
+      rgba(9, 9, 11, 1) 50%,
       rgba(255, 255, 255, 0) 100%
     );
     background: linear-gradient(
       90deg,
-      rgba(0, 0, 0, 1) 50%,
+      rgba(9, 9, 11, 1) 50%,
       rgba(255, 255, 255, 0) 100%
     );
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#ffffff",GradientType=1);
@@ -45,4 +45,27 @@
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(4.8px);
   -webkit-backdrop-filter: blur(4.8px);
+}
+
+.anime-details-gradient {
+  background: rgb(9, 9, 11);
+  background: -moz-linear-gradient(
+    180deg,
+    rgba(9, 9, 11, 1) 8%,
+    rgba(255, 255, 255, 0) 50%,
+    rgba(9, 9, 11, 1) 92%
+  );
+  background: -webkit-linear-gradient(
+    180deg,
+    rgba(9, 9, 11, 1) 8%,
+    rgba(255, 255, 255, 0) 50%,
+    rgba(9, 9, 11, 1) 92%
+  );
+  background: linear-gradient(
+    180deg,
+    rgba(9, 9, 11, 1) 8%,
+    rgba(255, 255, 255, 0) 50%,
+    rgba(9, 9, 11, 1) 92%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#09090b",endColorstr="#09090b",GradientType=1);
 }

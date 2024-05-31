@@ -12,8 +12,3 @@ export interface AnimeRecentData {
   hasNextPage: boolean;
   results: AnimeRecentResults[];
 }
-
-export interface AnimeRecentResponse {
-  data: AnimeRecentData;
-  isLoading: boolean;
-}

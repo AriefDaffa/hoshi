@@ -1,62 +1,47 @@
-import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import type { ChangeEvent, FC } from 'react';
+import { useParams } from 'react-router-dom';
+import { useMemo, type FC } from 'react';
 
 import Layout from '@/components/Layout';
-import useGetAnimeInfo from '@/services/anime/getAnimeInfo/useGetAnimeInfo';
-import Loader from '@/components/Loader';
 
-import AnimeDesc from './Section/AnimeDesc';
-import AnimeEpisodeList from './Section/AnimeEpisodeList';
+import TopSection from './Section/TopSection';
+import EpisodeSection from './Section/EpisodeSection';
+import useGetAnimeInfo from '@/services/anime/getAnimeInfo/useGetAnimeInfo';
 
 interface AnimeDetailProps {}
 
 const AnimeDetail: FC<AnimeDetailProps> = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
-
-  const [sort, setSort] = useState('descend');
-  const [episode, setEpisode] = useState('');
 
   const checkID = typeof id === 'string' ? id : '';
 
   const { data, isLoading } = useGetAnimeInfo({ id: checkID });
 
-  const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setEpisode(e.target.value);
-  };
-
-  const handleSort = () => {
-    if (sort === 'descend') {
-      setSort('ascend');
-    } else {
-      setSort('descend');
-    }
-  };
-
-  useEffect(() => {
-    if (!isLoading && data.id === '') {
-      navigate('/');
-    }
-  }, [data, isLoading, navigate]);
+  const parentLoading = useMemo(
+    () => isLoading && data.id === '',
+    [data.id, isLoading]
+  );
 
   return (
     <Layout>
-      {!isLoading ? (
-        <div className="w-full h-full mb-4 text-center px-2">
-          <AnimeDesc {...data} />
-          <AnimeEpisodeList
-            {...data}
-            id={checkID}
-            sort={sort}
-            episode={episode}
-            onInputChange={onInputChange}
-            handleSort={handleSort}
-          />
+      <div className="size-full px-4 mb-16">
+        <TopSection data={data} isLoading={parentLoading} />
+        <div className="mb-2">
+          <div className="text-2xl font-bold mb-2">Description</div>
+          {parentLoading ? (
+            <>
+              <div className="w-full h-6 animate-pulse rounded-md mb-2 bg-slate-800" />
+              <div className="w-full h-6 animate-pulse rounded-md mb-2 bg-slate-800" />
+              <div className="w-full h-6 animate-pulse rounded-md mb-2 bg-slate-800" />
+              <div className="w-full h-6 animate-pulse rounded-md mb-2 bg-slate-800" />
+            </>
+          ) : (
+            <div className="text-justify overflow-auto ">
+              {data.description}
+            </div>
+          )}
         </div>
-      ) : (
-        <Loader />
-      )}
+        <EpisodeSection data={data} isLoading={isLoading} />
+      </div>
     </Layout>
   );
 };

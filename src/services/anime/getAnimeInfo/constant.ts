@@ -1,0 +1,15 @@
+export const defaultVal = {
+  id: '',
+  title: '',
+  url: '',
+  image: '',
+  releaseDate: '',
+  description: '',
+  genres: [],
+  subOrDub: '',
+  type: '',
+  status: '',
+  otherName: '',
+  totalEpisodes: 0,
+  episodes: [],
+};

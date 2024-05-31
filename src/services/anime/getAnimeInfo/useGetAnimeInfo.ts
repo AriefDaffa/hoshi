@@ -1,62 +1,29 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
 
-import { getAnimeInfo } from '.';
-import type { AnimeInfoResponse, UseGetSearchInfoProps } from './types';
+import { defaultVal } from './constant';
+import type { AnimeInfoData, UseGetSearchInfoProps } from './types';
 
-const defaultVal = {
-  id: '',
-  title: '',
-  url: '',
-  image: '',
-  releaseDate: '',
-  description: '',
-  genres: [],
-  subOrDub: '',
-  type: '',
-  status: '',
-  otherName: '',
-  totalEpisodes: 0,
-  episodes: [],
-};
+const useGetAnimeInfo = ({ id }: UseGetSearchInfoProps) => {
+  const { isPending, data, isSuccess } = useQuery<AnimeInfoData>({
+    queryKey: ['anime-details', id],
+    queryFn: () =>
+      fetch(
+        `${import.meta.env.VITE_APP_BASE_API}/anime/gogoanime/info/${id}`
+      ).then((res) => res.json()),
+  });
 
-const useGetAnimeInfo = ({ id }: UseGetSearchInfoProps): AnimeInfoResponse => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
-  const [data, setData] = useState(defaultVal);
-
-  const fetchData = useCallback(async () => {
-    setIsLoading(true);
-    setIsError(false);
-
-    try {
-      const req = await getAnimeInfo({ id });
-
-      const response = await req.json();
-
-      setIsLoading(false);
-
-      if (req.status >= 200 && req.status < 300) {
-        setData(response);
-      } else {
-        setData(defaultVal);
-        setIsError(true);
-      }
-    } catch (error) {
-      setData(defaultVal);
-      setIsLoading(false);
-      setIsError(true);
+  const normalizer = useMemo(() => {
+    if (!isSuccess) {
+      return defaultVal;
+    } else {
+      return data;
     }
-  }, [id]);
-
-  useEffect(() => {
-    if (id !== '') {
-      fetchData();
-    }
-  }, [fetchData, id]);
+  }, [data, isSuccess]);
 
   return useMemo(() => {
-    return { data, isLoading, isError };
-  }, [data, isError, isLoading]);
+    return { isLoading: isPending, data: normalizer, isSuccess };
+  }, [isPending, isSuccess, normalizer]);
 };
 
 export default useGetAnimeInfo;

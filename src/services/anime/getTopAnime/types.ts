@@ -13,8 +13,3 @@ export interface AnimeTopData {
   hasNextPage: boolean;
   results: AnimeTopResults[];
 }
-
-export interface AnimeTopResponse {
-  data: AnimeTopData;
-  isLoading: boolean;
-}

@@ -6,7 +6,7 @@ export interface UseGetSearchAnimeProps {
   keyword: string;
 }
 
-interface AnimeSearchResults {
+export interface AnimeSearchResults {
   id: string;
   title: string;
   image: string;

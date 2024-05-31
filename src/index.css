@@ -60,7 +60,7 @@
 
 input[type='range'] {
   appearance: none;
-  height: 7px;
+  height: 4px;
   background: rgb(169, 169, 169);
   border-radius: 5px;
   background-image: linear-gradient(#1ec5f5, #1ec5f5);
@@ -72,6 +72,7 @@ input[type='range']::-webkit-slider-thumb {
   height: 16px;
   width: 16px;
   border-radius: 50%;
+  border: 2px solid #fff;
   background: #1ec5f5;
   cursor: pointer;
   box-shadow: 0 0 2px 0 #555;
