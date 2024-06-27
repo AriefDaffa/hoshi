@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 
 import Layout from '@/components/Layout';
+import Background from '@/components/Background';
 
 import useGetTopAnime from '@/services/anime/getTopAnime/useGetTopAnime';
 import useGetRecentAnime from '@/services/anime/getRecentAnime/useGetRecentAnime';
@@ -8,7 +9,6 @@ import useGetBrowseAnime from '@/services/anime/getBrowseAnime/useGetBrowseAnime
 import TrendingAnime from './Section/TrendingAnime';
 import BrowseAnime from './Section/BrowseAnime';
 import LatestAnime from './Section/LatestAnime';
-import Background from './Section/Background';
 
 interface HomeProps {}
 
