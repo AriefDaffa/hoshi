@@ -27,7 +27,7 @@ const LatestItem: FC<LatestItemProps> = ({
           <div className="text-sm text-muted-foreground">
             Episode {episodeNumber}
           </div>
-          <div className="line-clamp-1">{title}</div>
+          <div className="line-clamp-1 pr-2">{title}</div>
         </div>
         {/* <div className={`${onHover ? 'block' : 'hidden'} pr-2`}>
           <FaCirclePlay size={32} />
