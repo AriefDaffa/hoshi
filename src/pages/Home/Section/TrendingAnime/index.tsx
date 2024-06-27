@@ -12,7 +12,7 @@ interface TrendingAnimeProps {
 
 const TrendingAnime: FC<TrendingAnimeProps> = ({ data, isLoading }) => {
   return (
-    <div className="size-full pt-16 px-4">
+    <div className="size-full pt-20 px-4">
       <div>
         <div className="text-muted-foreground">
           Currently popular this season

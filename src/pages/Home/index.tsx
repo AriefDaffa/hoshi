@@ -4,9 +4,11 @@ import Layout from '@/components/Layout';
 
 import useGetTopAnime from '@/services/anime/getTopAnime/useGetTopAnime';
 import useGetRecentAnime from '@/services/anime/getRecentAnime/useGetRecentAnime';
+import useGetBrowseAnime from '@/services/anime/getBrowseAnime/useGetBrowseAnime';
 import TrendingAnime from './Section/TrendingAnime';
 import BrowseAnime from './Section/BrowseAnime';
 import LatestAnime from './Section/LatestAnime';
+import Background from './Section/Background';
 
 interface HomeProps {}
 
@@ -14,19 +16,16 @@ const Home: FC<HomeProps> = () => {
   const { data: topAnime, isLoading: isTopAnimeLoading } = useGetTopAnime();
   const { data: recentAnime, isLoading: isRecentAnimeLoading } =
     useGetRecentAnime();
+  const {
+    data: browseData,
+    isLoading: isBrowseLoading,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useGetBrowseAnime();
 
   return (
     <div className="relative bg-black">
-      <div className="absolute h-screen w-full top-0 z-20">
-        <img src="/assets/images/gradient.png" alt="" className="size-full" />
-      </div>
-      <div className="absolute h-screen w-full object-cover top-0 z-10">
-        <img
-          src="/assets/images/firefly.jpeg"
-          alt=""
-          className="size-full object-cover"
-        />
-      </div>
+      <Background />
       <Layout>
         <TrendingAnime data={topAnime.results} isLoading={isTopAnimeLoading} />
         <LatestAnime
@@ -34,8 +33,10 @@ const Home: FC<HomeProps> = () => {
           isLoading={isRecentAnimeLoading}
         />
         <BrowseAnime
-          data={recentAnime.results}
-          isLoading={isRecentAnimeLoading}
+          data={browseData.pages}
+          isFetchingNextPage={isFetchingNextPage}
+          isLoading={isBrowseLoading}
+          handleNextBrowse={fetchNextPage}
         />
       </Layout>
     </div>
