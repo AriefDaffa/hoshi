@@ -58,16 +58,16 @@ const Navbar: FC<NavbarProps> = () => {
   }, [setIsDialogOpen]);
 
   return (
-    <div className="sticky top-0 w-full bg-[#09090B] z-50">
+    <div className="sticky top-0 w-full  z-50">
       <div className="h-14 flex justify-center w-full ">
         <div className="flex justify-between items-center h-full px-4 w-full max-w-screen-xl relative">
           <div
             className="flex items-center gap-2 cursor-pointer"
             onClick={navigateHome}
           >
-            <img src="/assets/images/logo.png" alt="" className="h-10" />
+            <img src="/assets/images/logo.png" alt="" className="h-20" />
           </div>
-          <div>
+          <div className="bg-primary rounded-md">
             <div
               className="items-center  rounded-md py-2 px-2 cursor-pointer hidden md:flex md:border"
               onClick={handleOpenModal}

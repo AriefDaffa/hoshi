@@ -15,7 +15,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   const checkFullScreen = isFullScreen && location.pathname.includes('episode');
 
   return (
-    <div className="w-full h-full flex flex-col items-center relative">
+    <div className="w-full h-full flex flex-col items-center relative z-30 ">
       {!checkFullScreen && <Navbar />}
       <div className={`w-full ${checkFullScreen ? '' : 'max-w-screen-xl'}`}>
         {children}
