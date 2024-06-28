@@ -14,7 +14,7 @@ const useGetAnimeInfo = ({ id }: UseGetSearchInfoProps) => {
   });
 
   const normalizer = useMemo(() => {
-    if (!isSuccess) {
+    if (!isSuccess || typeof data?.id !== 'string') {
       return defaultVal;
     } else {
       return data;

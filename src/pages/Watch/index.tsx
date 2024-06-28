@@ -40,6 +40,8 @@ const Watch: FC<WatchProps> = () => {
     { id: checkSlug }
   );
 
+  console.log(animeDetails);
+
   // custom hooks
   const { vidResolution } = useVidResolution();
   const { volume } = useVidVolume();
