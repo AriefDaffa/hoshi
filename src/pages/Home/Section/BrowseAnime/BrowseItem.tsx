@@ -29,16 +29,16 @@ const BrowseItem: FC<BrowseItemProps> = ({
       onClick={() => navigate(`/detail/${id}`)}
       className="relative cursor-pointer"
     >
-      <div className="h-52 rounded-md relative ">
+      <div className="h-96 rounded-md relative ">
         <img
           src={image}
           alt=""
-          className="h-52 w-full object-cover rounded-md hover:brightness-50"
+          className="h-96 w-full object-cover rounded-md hover:brightness-50"
           onMouseEnter={handleOnMouseHover}
           onMouseLeave={handleOnMouseLeave}
         />
         {onHover && (
-          <div className="absolute bottom-2 right-2 rounded-md py-2 px-4 backdrop-blur-2xl flex gap-2 items-center">
+          <div className="absolute bottom-1 right-1 rounded-md py-2 px-4 backdrop-blur-2xl flex gap-2 items-center">
             <div className="font-semibold">Play</div>
             <FaPlay />
           </div>
