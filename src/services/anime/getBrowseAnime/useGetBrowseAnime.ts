@@ -34,7 +34,7 @@ const useGetBrowseAnime = () => {
     } else {
       return {
         ...defaultVal,
-        pages: data.pages.map((item) => item.results).flat(),
+        results: data.pages.map((item) => item.results).flat(),
       };
     }
   }, [data, isSuccess]);

@@ -24,10 +24,9 @@ const BrowseAnime: FC<BrowseAnimeProps> = ({
         <div className="text-muted-foreground">Find your own favorite</div>
         <div className="text-5xl font-bold">Browse Anime</div>
       </div>
-      {data?.length === 0 ? (
+      {data.length === 0 ? (
         <BrowseSkeleton />
       ) : (
-        // <div className="grid gap-4 pt-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         <div className="grid gap-4 pt-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {data.map((item, idx) => (
             <BrowseItem key={idx} {...item} />

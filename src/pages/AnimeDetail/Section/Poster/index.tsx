@@ -16,7 +16,13 @@ const Poster: FC<PosterProps> = ({
   return (
     <div className="w-full flex top-0 md:sticky ">
       <div className="m-auto flex flex-col items-center gap-4">
-        <Badge className="text-sm text-muted-foreground">{status}</Badge>
+        <Badge
+          className={`text-sm text-muted-foreground text-white ${
+            status === 'Ongoing' ? 'bg-yellow-500' : 'bg-green-600 '
+          }`}
+        >
+          {status}
+        </Badge>
         <div className="max-w-96 text-sm text-muted-foreground text-center">
           {genres.join(', ')}
         </div>

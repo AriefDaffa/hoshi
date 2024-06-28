@@ -33,7 +33,7 @@ const Home: FC<HomeProps> = () => {
           isLoading={isRecentAnimeLoading}
         />
         <BrowseAnime
-          data={browseData.pages}
+          data={browseData.results}
           isFetchingNextPage={isFetchingNextPage}
           isLoading={isBrowseLoading}
           handleNextBrowse={fetchNextPage}

@@ -1,4 +1,5 @@
 export const defaultVal = {
-  pageParams: [],
-  pages: [],
+  currentPage: 0,
+  hasNextPage: false,
+  results: [],
 };
