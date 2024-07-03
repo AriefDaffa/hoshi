@@ -28,7 +28,7 @@ const Poster: FC<PosterProps> = ({
         </div>
         <img src={image} alt="" className="w-60 rounded-md" />
         <div className="max-w-96 text-center">
-          <div className="text-3xl  font-semibold">{title}</div>
+          <div className="text-3xl  font-semibold line-clamp-2">{title}</div>
           <div className="max-w-96 text-sm text-muted-foreground text-center">
             {otherName}
           </div>

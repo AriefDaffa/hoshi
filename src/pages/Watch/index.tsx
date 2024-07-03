@@ -167,7 +167,7 @@ const Watch: FC<WatchProps> = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+              // style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
               className="size-full flex flex-col justify-between relative"
               onClick={handlePlayer}
             >

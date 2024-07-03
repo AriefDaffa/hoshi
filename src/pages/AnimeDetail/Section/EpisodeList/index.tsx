@@ -26,7 +26,7 @@ const EpisodeList: FC<EpisodeListProps> = ({ episodes, image, id }) => {
               />
             </div>
             <div className="flex-1">
-              <div className="text-xs text-muted-foreground">
+              <div className="text-xs text-muted-foreground line-clamp-1">
                 {item.id.split('-').join(' ')}
               </div>
               <div>Episode {item.number}</div>
