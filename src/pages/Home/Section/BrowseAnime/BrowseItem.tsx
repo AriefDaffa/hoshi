@@ -7,12 +7,7 @@ import { FaPlay } from 'react-icons/fa';
 
 interface BrowseItemProps extends AnimeRecentResults {}
 
-const BrowseItem: FC<BrowseItemProps> = ({
-  id,
-  image,
-  title,
-  episodeNumber,
-}) => {
+const BrowseItem: FC<BrowseItemProps> = ({ id, image, title }) => {
   const [onHover, setOnHover] = useState(false);
   const navigate = useNavigate();
 
@@ -45,10 +40,7 @@ const BrowseItem: FC<BrowseItemProps> = ({
         )}
       </div>
       <div className="pt-2">
-        <div className="text-sm">Latest Episode: {episodeNumber}</div>
-        <div className="text-sm text-muted-foreground line-clamp-2">
-          {title}
-        </div>
+        <div className="text-sm line-clamp-2 text-center">{title}</div>
       </div>
     </div>
   );
