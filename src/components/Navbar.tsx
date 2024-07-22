@@ -58,8 +58,8 @@ const Navbar: FC<NavbarProps> = () => {
   }, [setIsDialogOpen]);
 
   return (
-    <div className="sticky top-0 w-full  z-50">
-      <div className="h-14 flex justify-center w-full ">
+    <div className="sticky top-0 w-full z-50">
+      <div className="h-14 flex justify-center w-full backdrop-blur-sm">
         <div className="flex justify-between items-center h-full px-4 w-full max-w-screen-xl relative">
           <div
             className="flex items-center gap-2 cursor-pointer"
