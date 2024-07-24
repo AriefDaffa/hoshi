@@ -20,14 +20,6 @@ const Home: FC<HomeProps> = () => {
     fetchNextPage,
     isFetchingNextPage,
   } = useGetRecentAnime();
-  // const {
-  //   data: browseData,
-  //   isLoading: isBrowseLoading,
-  //   isFetchingNextPage,
-  //   fetchNextPage,
-  // } = useGetBrowseAnime();
-
-  console.log(topAnime.results[Math.random()]?.image);
 
   return (
     <div className="relative bg-black">

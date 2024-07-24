@@ -1,11 +1,11 @@
 import type { FC } from 'react';
 
 interface BackgroundProps {
-  bgURL: string;
+  bgURL?: string;
   blurBG?: boolean;
 }
 
-const Background: FC<BackgroundProps> = ({ blurBG = false, bgURL }) => {
+const Background: FC<BackgroundProps> = ({ blurBG = false, bgURL = '' }) => {
   return (
     <>
       <div className={`absolute h-screen w-full top-0 z-20`}>
