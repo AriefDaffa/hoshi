@@ -16,7 +16,9 @@ const Background: FC<BackgroundProps> = ({ blurBG = false, bgURL = '' }) => {
           blurBG ? 'blur-xl' : ''
         }`}
       >
-        <img src={bgURL} alt="" className="size-full object-cover" />
+        {bgURL !== '' && (
+          <img src={bgURL} alt="" className="size-full object-cover" />
+        )}
       </div>
     </>
   );
