@@ -3,7 +3,6 @@ import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import type { AnimeRecentResults } from '@/services/anime/getRecentAnime/types';
-import { FaPlay } from 'react-icons/fa';
 
 interface BrowseItemProps extends AnimeRecentResults {}
 
@@ -22,25 +21,25 @@ const BrowseItem: FC<BrowseItemProps> = ({ id, image, title }) => {
   return (
     <div
       onClick={() => navigate(`/detail/${id}`)}
-      className="relative cursor-pointer"
+      className="relative cursor-pointer overflow-hidden"
     >
-      <div className="h-96 rounded-md relative ">
+      <div
+        className="h-96 rounded-md relative"
+        onMouseEnter={handleOnMouseHover}
+        onMouseLeave={handleOnMouseLeave}
+      >
         <img
           src={image}
           alt=""
-          className="h-96 w-full object-cover rounded-md hover:brightness-50"
-          onMouseEnter={handleOnMouseHover}
-          onMouseLeave={handleOnMouseLeave}
+          className="h-96 w-full object-cover rounded-md "
         />
         {onHover && (
-          <div className="absolute bottom-1 right-1 rounded-md py-2 px-4 backdrop-blur-2xl flex gap-2 items-center">
-            <div className="font-semibold">Play</div>
-            <FaPlay />
+          <div className="absolute w-full bottom-0 rounded-md p-2 flex items-end">
+            <div className="w-full bg-[#121212] backdrop-blur-md rounded-md p-2">
+              <div className="text-base line-clamp-2 text-center">{title}</div>
+            </div>
           </div>
         )}
-      </div>
-      <div className="pt-2">
-        <div className="text-sm line-clamp-2 text-center">{title}</div>
       </div>
     </div>
   );

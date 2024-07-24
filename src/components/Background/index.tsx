@@ -1,10 +1,11 @@
 import type { FC } from 'react';
 
 interface BackgroundProps {
+  bgURL: string;
   blurBG?: boolean;
 }
 
-const Background: FC<BackgroundProps> = ({ blurBG = false }) => {
+const Background: FC<BackgroundProps> = ({ blurBG = false, bgURL }) => {
   return (
     <>
       <div className={`absolute h-screen w-full top-0 z-20`}>
@@ -15,11 +16,7 @@ const Background: FC<BackgroundProps> = ({ blurBG = false }) => {
           blurBG ? 'blur-xl' : ''
         }`}
       >
-        <img
-          src="/assets/images/firefly.jpeg"
-          alt=""
-          className="size-full object-cover"
-        />
+        <img src={bgURL} alt="" className="size-full object-cover" />
       </div>
     </>
   );

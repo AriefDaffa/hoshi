@@ -1,29 +1,53 @@
 import { useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { defaultVal } from './constant';
-import type { AnimeRecentData } from './types';
 
 const useGetRecentAnime = () => {
-  const { isPending, data, isSuccess } = useQuery<AnimeRecentData>({
+  const fetchData = async ({ pageParam }: { pageParam: number }) => {
+    return await fetch(
+      `${
+        import.meta.env.VITE_APP_BASE_API
+      }/anime/gogoanime/recent-episodes?page=${pageParam}`
+    ).then((res) => res.json());
+  };
+
+  const {
+    data,
+    // error,
+    fetchNextPage,
+    // hasNextPage,
+    isSuccess,
+    isLoading,
+    isFetchingNextPage,
+    // status,
+  } = useInfiniteQuery({
     queryKey: ['recent'],
-    queryFn: () =>
-      fetch(
-        `${import.meta.env.VITE_APP_BASE_API}/anime/gogoanime/recent-episodes`
-      ).then((res) => res.json()),
+    queryFn: fetchData,
+    initialPageParam: 1,
+    getNextPageParam: (_, allPages) => allPages.length + 1,
   });
 
   const normalizer = useMemo(() => {
     if (!isSuccess) {
       return defaultVal;
     } else {
-      return data;
+      return {
+        ...defaultVal,
+        results: data.pages.map((item) => item.results).flat(),
+      };
     }
   }, [data, isSuccess]);
 
   return useMemo(() => {
-    return { isLoading: isPending, data: normalizer, isSuccess };
-  }, [isPending, isSuccess, normalizer]);
+    return {
+      isLoading,
+      isFetchingNextPage,
+      data: normalizer,
+      isSuccess,
+      fetchNextPage,
+    };
+  }, [fetchNextPage, isFetchingNextPage, isLoading, isSuccess, normalizer]);
 };
 
 export default useGetRecentAnime;
