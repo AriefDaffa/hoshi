@@ -14,7 +14,7 @@ const EpisodeList: FC<EpisodeListProps> = ({ episodes, id }) => {
 
   return (
     <div className="md:w-[70%]">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
         <div className="text-xl font-semibold underline underline-offset-2">
           Episodes
         </div>
