@@ -24,7 +24,10 @@ const PopularSection: FC<PopularSectionProps> = ({ results }) => {
               <img src={item.image} alt="" className="size-full object-cover" />
             </div>
             <div className="w-[85%]">
-              <div>{item.title}</div>
+              <div className="line-clamp-2">{item.title}</div>
+              <div className="text-sm text-muted-foreground">
+                Rank #{idx + 1}
+              </div>
             </div>
           </div>
         ))}

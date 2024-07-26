@@ -62,7 +62,7 @@ const LatestItem: FC<LatestItemProps> = ({
           <Separator className="w-1/6" />
           <div className="text-xs h-1/2 pt-1 space-y-2">
             <div
-              className="flex justify-between cursor-pointer hover:brightness-50"
+              className="flex gap-2 cursor-pointer items-center hover:brightness-50"
               onClick={() => navigate(`/watch/${id}/${episodeId}`)}
             >
               Episode {episodeNumber} <Badge className="bg-red-600">New</Badge>
@@ -76,10 +76,6 @@ const LatestItem: FC<LatestItemProps> = ({
               </div>
             )}
           </div>
-          {/* <Button className="flex gap-4 items-center float-right bg-red-700">
-            Play
-            <FaPlay />
-          </Button> */}
         </div>
       </div>
     </div>
