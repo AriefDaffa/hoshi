@@ -5,10 +5,9 @@ import Background from '@/components/Background';
 
 import useGetTopAnime from '@/services/anime/getTopAnime/useGetTopAnime';
 import useGetRecentAnime from '@/services/anime/getRecentAnime/useGetRecentAnime';
-// import useGetBrowseAnime from '@/services/anime/getBrowseAnime/useGetBrowseAnime';
 import TrendingAnime from './Section/TrendingAnime';
-// import BrowseAnime from './Section/BrowseAnime';
 import LatestAnime from './Section/LatestAnime';
+import ContinueWatching from './Section/ContinueWatching';
 
 interface HomeProps {}
 
@@ -30,18 +29,13 @@ const Home: FC<HomeProps> = () => {
       />
       <Layout>
         <TrendingAnime data={topAnime.results} isLoading={isTopAnimeLoading} />
+        <ContinueWatching />
         <LatestAnime
           data={recentAnime.results}
           isLoading={isRecentAnimeLoading}
           isFetchingNextPage={isFetchingNextPage}
           handleNextBrowse={fetchNextPage}
         />
-        {/* <BrowseAnime
-          data={browseData.results}
-          isFetchingNextPage={isFetchingNextPage}
-          isLoading={isBrowseLoading}
-          handleNextBrowse={fetchNextPage}
-        /> */}
       </Layout>
     </div>
   );

@@ -20,7 +20,7 @@ const LatestAnime: FC<LatestAnimeProps> = ({
   isFetchingNextPage,
 }) => {
   return (
-    <div className="px-4 mb-4 pt-24">
+    <div className="px-4 pt-12 mb-4">
       <div>
         <div className="text-muted-foreground">
           Check out the latest updated Anime!

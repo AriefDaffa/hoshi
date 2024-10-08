@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ReactPlayer from 'react-player';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { useIdle } from '@mantine/hooks';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -30,6 +30,7 @@ const Watch: FC<WatchProps> = () => {
   const [duration, setDuration] = useState(0);
 
   const isIdle = useIdle(1000);
+  const location = useLocation();
 
   const checkSlug = typeof slug === 'string' ? slug : '';
   const checkID = typeof id === 'string' ? id : '';
@@ -39,8 +40,6 @@ const Watch: FC<WatchProps> = () => {
   const { data: animeDetails, isLoading: isAnimeInfoLoading } = useGetAnimeInfo(
     { id: checkSlug }
   );
-
-  console.log(animeDetails);
 
   // custom hooks
   const { vidResolution } = useVidResolution();
@@ -153,22 +152,73 @@ const Watch: FC<WatchProps> = () => {
     };
   }, [isDialogOpen, isPlaying, timeRunning]);
 
+  useEffect(() => {
+    const url = localStorage.getItem('hoshi-bkmrk');
+
+    if (url) {
+      const arrBkmrk = JSON.parse(url);
+
+      if (Array.isArray(arrBkmrk)) {
+        const data = {
+          imgSrc: animeDetails.image,
+          path: location.pathname,
+          title: animeDetails.title,
+          episode: currentEps,
+          timeStamp: timeRunning,
+          duration: duration,
+        };
+
+        const it = arrBkmrk.find((el) => el?.path === location.pathname);
+        const itemIndex = arrBkmrk.findIndex(
+          (el) => el?.path === location.pathname
+        );
+
+        if (it) {
+          if (itemIndex !== 0) {
+            const [itemToMove] = arrBkmrk.splice(itemIndex, 1);
+            arrBkmrk.unshift(itemToMove);
+          }
+
+          arrBkmrk.find((el, idx) => {
+            if (el?.path === location.pathname) {
+              arrBkmrk[idx] = data;
+            }
+          });
+        } else {
+          arrBkmrk.push(data);
+        }
+
+        localStorage.setItem('hoshi-bkmrk', JSON.stringify(arrBkmrk));
+      } else {
+        localStorage.setItem('hoshi-bkmrk', JSON.stringify([]));
+      }
+    } else {
+      localStorage.setItem('hoshi-bkmrk', JSON.stringify([]));
+    }
+  }, [
+    animeDetails?.image,
+    animeDetails?.title,
+    currentEps,
+    duration,
+    location,
+    timeRunning,
+  ]);
+
   return (
-    <div className="w-screen h-screen relative">
+    <div className="relative w-screen h-screen">
       {parentLoading && (
-        <div className="absolute top-0 left-0 right-0 bottom-0 m-auto size-min ">
+        <div className="absolute top-0 bottom-0 left-0 right-0 m-auto size-min ">
           <AiOutlineLoading3Quarters size={50} className="animate-spin" />
         </div>
       )}
-      <div className="size-full absolute top-0 z-10">
+      <div className="absolute top-0 z-10 size-full">
         <AnimatePresence>
           {!checkIsPlaying && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              // style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-              className="size-full flex flex-col justify-between relative"
+              className="relative flex flex-col justify-between size-full"
               onClick={handlePlayer}
             >
               <TopMenu
