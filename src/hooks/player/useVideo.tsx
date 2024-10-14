@@ -182,7 +182,7 @@ const useVideo = ({
       duration,
     });
 
-    if (videoURL) {
+    if (videoURL && !isPlaying) {
       player.current?.seekTo(videoSliderTime);
     }
   }, [
@@ -190,6 +190,7 @@ const useVideo = ({
     currentEps,
     duration,
     imgSrc,
+    isPlaying,
     location.pathname,
     title,
     videoSliderTime,
