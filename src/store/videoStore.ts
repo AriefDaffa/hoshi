@@ -45,8 +45,10 @@ export const useVideoStore = create<IVideosStore>()(
           return { episode: datas };
         });
       },
-      handleVolume(vol) {
-        set({ volume: vol });
+      handleVolume(e) {
+        set(() => {
+          return { volume: parseFloat(e.target.value) };
+        });
       },
       handleProgress(path, progress) {
         set((state) => {

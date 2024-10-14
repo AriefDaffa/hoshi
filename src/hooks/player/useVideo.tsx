@@ -48,15 +48,11 @@ const useVideo = ({
     handleVolume,
     handleResolutionChange,
     createWatch,
+    handleProgress,
+    episode,
   } = useVideoStore();
 
-  const handleVolumeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    handleVolume(parseFloat(e.target.value));
-  };
-
-  const handleResChange = (e: string) => {
-    handleResolutionChange(e);
-  };
+  const location = useLocation();
 
   const videoURL = useMemo(() => {
     const filterURL = animeStream.sources.find((x) => x.quality === resolution);
@@ -106,7 +102,7 @@ const useVideo = ({
 
   const checkIsPlaying = useMemo(() => {
     if (isPlaying) {
-      if (isSheetOpen) {
+      if (isSheetOpen || isDialogOpen) {
         return false;
       } else {
         return isIdle;
@@ -114,11 +110,7 @@ const useVideo = ({
     } else {
       return isPlaying;
     }
-  }, [isIdle, isPlaying, isSheetOpen]);
-
-  const location = useLocation();
-
-  const { handleProgress, episode } = useVideoStore();
+  }, [isDialogOpen, isIdle, isPlaying, isSheetOpen]);
 
   const videoSliderTime = useMemo(
     () => episode.find((el) => el.path === location.pathname)?.timeStamp || 0,
@@ -201,8 +193,8 @@ const useVideo = ({
     volume,
     resolution,
     isPlaying,
-    handleVolumeChange,
-    handleResChange,
+    handleVolumeChange: handleVolume,
+    handleResChange: handleResolutionChange,
     videoURL,
     secondPlayed,
     duration,

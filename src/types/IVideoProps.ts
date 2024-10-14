@@ -1,3 +1,5 @@
+import type { ChangeEvent } from 'react';
+
 export interface IEpisode {
   imgSrc: string;
   path: string;
@@ -12,7 +14,7 @@ export interface IVideosStore {
   resolution: string;
   episode: IEpisode[];
   createWatch: (anime: IEpisode) => void;
-  handleVolume: (vol: number) => void;
+  handleVolume: (e: ChangeEvent<HTMLInputElement>) => void;
   handleProgress: (path: string, progress: number) => void;
   handleResolutionChange: (res: string) => void;
 }
