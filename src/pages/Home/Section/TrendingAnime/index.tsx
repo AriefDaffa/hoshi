@@ -12,14 +12,14 @@ interface TrendingAnimeProps {
 
 const TrendingAnime: FC<TrendingAnimeProps> = ({ data, isLoading }) => {
   return (
-    <div className="size-full pt-20 px-4">
+    <div className="px-4 pt-20 size-full">
       <div>
         <div className="text-muted-foreground">
           Currently popular this season
         </div>
         <div className="text-5xl font-bold">Trending Anime</div>
       </div>
-      <div className="flex flex-col gap-4 pt-4 h-[250px] flex-wrap overflow-x-auto">
+      <div className="flex gap-4 py-4 overflow-x-auto">
         {isLoading || data?.length === 0 ? (
           <TrendingSkeleton />
         ) : (

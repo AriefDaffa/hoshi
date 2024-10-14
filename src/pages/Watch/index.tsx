@@ -1,36 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ReactPlayer from 'react-player';
-import { useLocation, useParams } from 'react-router-dom';
-import { useIdle } from '@mantine/hooks';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import type { ChangeEvent, FC } from 'react';
-import type { OnProgressProps } from 'react-player/base';
+import type { FC } from 'react';
 
 import useGetAnimeInfo from '@/services/anime/getAnimeInfo/useGetAnimeInfo';
 import useGetAnimeStreamURL from '@/services/anime/getAnimeStreamURL/useGetAnimeStreamURL';
 import BottomMenu from './Section/BottomMenu';
 import TopMenu from './Section/TopMenu';
 import SheetEpisode from './Section/SheetEpisode';
-import useVidVolume from './hooks/useVidVolume';
-import useVidResolution from './hooks/useVidResolution';
+import useVideo from '@/hooks/player/useVideo';
 
 interface WatchProps {}
 
 const Watch: FC<WatchProps> = () => {
   const { slug, id } = useParams();
-  const [isSeeking, setIsSeeking] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isBuffer, setIsBuffer] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [timeRunning, setTimeRunning] = useState(0);
-  const [secondPlayed, setSecondPlayed] = useState(0);
-  const [duration, setDuration] = useState(0);
-
-  const isIdle = useIdle(1000);
-  const location = useLocation();
 
   const checkSlug = typeof slug === 'string' ? slug : '';
   const checkID = typeof id === 'string' ? id : '';
@@ -41,168 +26,41 @@ const Watch: FC<WatchProps> = () => {
     { id: checkSlug }
   );
 
-  // custom hooks
-  const { vidResolution } = useVidResolution();
-  const { volume } = useVidVolume();
-
-  const player = useRef<ReactPlayer>(null);
-
-  const handleSeekChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setTimeRunning(parseFloat(e.target.value));
-  };
-
-  const handleSeekMouseUp = (e: any) => {
-    setIsSeeking(false);
-
-    if (player.current !== null) {
-      player.current.seekTo(parseFloat(e.target.value));
-    }
-  };
-
-  const handleSeekMouseDown = () => {
-    setIsSeeking(true);
-  };
-
-  const handleProgress = (e: OnProgressProps) => {
-    if (!isSeeking) {
-      setTimeRunning(e.played);
-    }
-    setSecondPlayed(e.playedSeconds);
-  };
-
-  const handlePlayer = () => {
-    setIsPlaying(!isPlaying);
-  };
-
-  const handleSheetClose = useCallback(() => {
-    setIsSheetOpen(false);
-  }, []);
-
-  const handleSheetOpen = useCallback(() => {
-    setIsSheetOpen(true);
-  }, []);
-
-  const currentEps = useMemo(() => {
-    const splittedArr = checkID.split('-');
-
-    return splittedArr[splittedArr.length - 1] || '';
-  }, [checkID]);
-
-  const parentLoading = useMemo(() => {
-    return isAnimeStreamLoading || isAnimeInfoLoading || isBuffer;
-  }, [isAnimeInfoLoading, isAnimeStreamLoading, isBuffer]);
-
-  const checkIsPlaying = useMemo(() => {
-    if (isPlaying) {
-      if (isSheetOpen) {
-        return false;
-      } else {
-        return isIdle;
-      }
-    } else {
-      return isPlaying;
-    }
-  }, [isIdle, isPlaying, isSheetOpen]);
-
-  const videoURL = useMemo(() => {
-    const filterURL = animeStream.sources.find(
-      (x) => x.quality === vidResolution
-    );
-
-    if (filterURL === undefined) {
-      return animeStream.sources[0].url;
-    } else {
-      return filterURL.url;
-    }
-  }, [animeStream.sources, vidResolution]);
-
-  useEffect(() => {
-    const down = (e: KeyboardEvent) => {
-      if (e.key === ' ' && !isDialogOpen) {
-        e.preventDefault();
-        setIsPlaying(!isPlaying);
-      }
-    };
-
-    const right = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight' && !isDialogOpen) {
-        e.preventDefault();
-        if (player.current !== null) {
-          player.current.seekTo(timeRunning + 0.005);
-        }
-      }
-    };
-
-    const left = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft' && !isDialogOpen) {
-        e.preventDefault();
-        if (player.current !== null) {
-          player.current.seekTo(timeRunning - 0.005);
-        }
-      }
-    };
-
-    document.addEventListener('keydown', down);
-    document.addEventListener('keydown', right);
-    document.addEventListener('keydown', left);
-    return () => {
-      document.removeEventListener('keydown', down);
-      document.removeEventListener('keydown', right);
-      document.removeEventListener('keydown', left);
-    };
-  }, [isDialogOpen, isPlaying, timeRunning]);
-
-  useEffect(() => {
-    const url = localStorage.getItem('hoshi-bkmrk');
-
-    if (url) {
-      const arrBkmrk = JSON.parse(url);
-
-      if (Array.isArray(arrBkmrk)) {
-        const data = {
-          imgSrc: animeDetails.image,
-          path: location.pathname,
-          title: animeDetails.title,
-          episode: currentEps,
-          timeStamp: timeRunning,
-          duration: duration,
-        };
-
-        const it = arrBkmrk.find((el) => el?.path === location.pathname);
-        const itemIndex = arrBkmrk.findIndex(
-          (el) => el?.path === location.pathname
-        );
-
-        if (it) {
-          if (itemIndex !== 0) {
-            const [itemToMove] = arrBkmrk.splice(itemIndex, 1);
-            arrBkmrk.unshift(itemToMove);
-          }
-
-          arrBkmrk.find((el, idx) => {
-            if (el?.path === location.pathname) {
-              arrBkmrk[idx] = data;
-            }
-          });
-        } else {
-          arrBkmrk.push(data);
-        }
-
-        localStorage.setItem('hoshi-bkmrk', JSON.stringify(arrBkmrk));
-      } else {
-        localStorage.setItem('hoshi-bkmrk', JSON.stringify([]));
-      }
-    } else {
-      localStorage.setItem('hoshi-bkmrk', JSON.stringify([]));
-    }
-  }, [
-    animeDetails?.image,
-    animeDetails?.title,
+  const {
+    checkIsPlaying,
     currentEps,
     duration,
-    location,
+    handlePlayer,
+    handleProgress,
+    handleResChange,
+    handleSeekChange,
+    handleSeekMouseDown,
+    handleSeekMouseUp,
+    handleSheetClose,
+    handleSheetOpen,
+    handleVolumeChange,
+    parentLoading,
+    resolution,
+    isPlaying,
+    secondPlayed,
+    setDuration,
+    setIsBuffer,
+    setIsDialogOpen,
+    videoURL,
+    volume,
+    isDialogOpen,
+    isSheetOpen,
+    player,
     timeRunning,
-  ]);
+    setIsPlaying,
+  } = useVideo({
+    animeStream,
+    checkID,
+    isAnimeInfoLoading,
+    isAnimeStreamLoading,
+    imgSrc: animeDetails.image,
+    title: animeDetails.title,
+  });
 
   return (
     <div className="relative w-screen h-screen">
@@ -229,13 +87,15 @@ const Watch: FC<WatchProps> = () => {
                 handleSheetOpen={handleSheetOpen}
               />
               <BottomMenu
+                volume={volume}
+                resolution={resolution}
+                handleVolumeChange={handleVolumeChange}
+                handleResChange={handleResChange}
                 duration={duration}
                 timePlayed={secondPlayed}
                 played={timeRunning}
-                volume={volume}
                 isPlaying={isPlaying}
                 resolutionList={animeStream.sources}
-                selectedResolution={vidResolution}
                 handlePlay={handlePlayer}
                 handleSeekChange={handleSeekChange}
                 handleSeekMouseDown={handleSeekMouseDown}

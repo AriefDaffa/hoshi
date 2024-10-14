@@ -10,14 +10,14 @@ const TrendingItem: FC<TrendingItemProps> = ({ id, image, title }) => {
 
   return (
     <div
-      className="cursor-pointer w-80"
+      className="cursor-pointer min-w-64"
       onClick={() => navigate(`/detail/${id}`)}
     >
-      <div className="h-44 rounded-md relative flex items-end border w-full hover:brightness-50">
+      <div className="relative flex items-end w-full border rounded-md h-96 hover:brightness-50">
         <img
           src={image}
           alt=""
-          className="object-cover h-44 rounded-md w-full"
+          className="object-cover w-full rounded-md h-96"
         />
       </div>
       <div className="mt-2">

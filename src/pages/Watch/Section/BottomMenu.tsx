@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button } from '@/components/ui/button';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import { FaPause, FaPlay, FaVolumeDown } from 'react-icons/fa';
 import { RiFullscreenExitFill, RiFullscreenFill } from 'react-icons/ri';
 import { useFullscreen } from '@mantine/hooks';
-import { convertSec } from '@/utils/convertSec';
 import type { ChangeEvent, FC } from 'react';
 
-import type { AnimeStreamSources } from '@/services/anime/getAnimeStreamURL/types';
+import { convertSec } from '@/utils/convertSec';
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
@@ -15,37 +15,38 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { AnimatePresence, motion } from 'framer-motion';
-import useVidResolution from '../hooks/useVidResolution';
-import useVidVolume from '../hooks/useVidVolume';
+import type { AnimeStreamSources } from '@/services/anime/getAnimeStreamURL/types';
 
 interface BottomMenuProps {
-  volume: number;
   isPlaying: boolean;
   played: number;
-  selectedResolution: string;
   duration: number;
   timePlayed: number;
+  volume: number;
+  resolution: string;
   resolutionList: AnimeStreamSources[];
   handlePlay: () => void;
   handleSeekMouseDown: () => void;
   handleSeekMouseUp: (e: any) => void;
-  // handleVolumeChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleResChange: (e: string) => void;
+  handleVolumeChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleSeekChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const BottomMenu: FC<BottomMenuProps> = ({
   isPlaying,
   played,
-  volume,
   duration,
   timePlayed,
-  selectedResolution,
   resolutionList,
+  volume,
+  resolution,
   handlePlay,
   handleSeekChange,
   handleSeekMouseDown,
   handleSeekMouseUp,
+  handleVolumeChange,
+  handleResChange,
   // handleVolumeChange,
 }) => {
   const [showVolume, setShowVolume] = useState(false);
@@ -64,12 +65,11 @@ const BottomMenu: FC<BottomMenuProps> = ({
     setShowVolume(false);
   };
 
-  const { handleResolutionChange } = useVidResolution();
-  const { handleVolumeChange } = useVidVolume();
+  console.log('rex-2', played);
 
   return (
     <div className="p-2" onClick={(e) => e.stopPropagation()}>
-      <div className="w-full flex justify-between">
+      <div className="flex justify-between w-full">
         <div className="text-sm font-light">{convertSec(timePlayed)}</div>
         <div className="text-sm font-light">{convertSec(duration)}</div>
       </div>
@@ -85,7 +85,7 @@ const BottomMenu: FC<BottomMenuProps> = ({
         onMouseDown={handleSeekMouseDown}
         onMouseUp={handleSeekMouseUp}
       />
-      <div className="mt-1 flex justify-between">
+      <div className="flex justify-between mt-1">
         <div className="flex">
           <Button variant="ghost" size="icon" onClick={handlePlay}>
             {isPlaying ? <FaPause /> : <FaPlay />}
@@ -117,12 +117,9 @@ const BottomMenu: FC<BottomMenuProps> = ({
             </AnimatePresence>
           </Button>
         </div>
-        <div className="flex gap-2 items-center">
-          <Select
-            value={selectedResolution}
-            onValueChange={handleResolutionChange}
-          >
-            <SelectTrigger className="w-min border-0">
+        <div className="flex items-center gap-2">
+          <Select value={resolution} onValueChange={handleResChange}>
+            <SelectTrigger className="border-0 w-min">
               <SelectValue placeholder="480p" />
             </SelectTrigger>
             <SelectContent>
