@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { IoIosArrowBack, IoIosSearch } from 'react-icons/io';
 import { FaListUl } from 'react-icons/fa';
+import { IoMdHome } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import { ChangeEvent, Dispatch, SetStateAction, type FC } from 'react';
 
@@ -50,16 +51,19 @@ const TopMenu: FC<TopMenuProps> = ({
 
   return (
     <div
-      className="p-2 flex justify-between"
+      className="flex justify-between p-2"
       onClick={(e) => e.stopPropagation()}
     >
-      <div className=" flex gap-2 items-center">
+      <div className="flex items-center gap-2 ">
         <Button
           variant="ghost"
           size="icon"
           onClick={() => navigate(`/detail/${animeInfo.id}`)}
         >
           <IoIosArrowBack />
+        </Button>
+        <Button variant="ghost" size="icon" onClick={() => navigate(`/`)}>
+          <IoMdHome />
         </Button>
         <Separator orientation="vertical" className="h-8" />
         <div>
@@ -98,7 +102,7 @@ const TopMenu: FC<TopMenuProps> = ({
             />
             {keyword === '' ? (
               <div className="h-[250px] flex items-center justify-center">
-                <div className="flex flex-col items-center w-full justify-center">
+                <div className="flex flex-col items-center justify-center w-full">
                   <div>Start typing to search</div>
                 </div>
               </div>
@@ -114,9 +118,9 @@ const TopMenu: FC<TopMenuProps> = ({
                   <div
                     key={idx}
                     onClick={() => navigateSearch(item.id)}
-                    className="flex gap-2 items-end cursor-pointer p-2 rounded-md hover:bg-primary"
+                    className="flex items-end gap-2 p-2 rounded-md cursor-pointer hover:bg-primary"
                   >
-                    <div className="h-24 w-20  object-cover rounded-md overflow-hidden">
+                    <div className="object-cover w-20 h-24 overflow-hidden rounded-md">
                       <img src={item.image} alt="" className="size-full" />
                     </div>
                     <div className="w-full h-full">
